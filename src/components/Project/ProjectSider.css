@@ -1,0 +1,9 @@
+.ant-menu-item:hover {
+    border-radius: 1px;
+  }
+
+  .ant-menu-item-selected {
+    color: #1677ff;
+    border-radius: 1px !important;
+    padding: 0;
+  }

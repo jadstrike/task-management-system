@@ -1,0 +1,22 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap'); */
+
+
+.loginfailed-wrapper{
+    font-weight: 300;
+    margin: 0px;
+    padding: 0px;
+}
+
+.loginfailed-items{
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.loginfailed-button:hover{
+    background-color: #1890FF !important;
+
+}
