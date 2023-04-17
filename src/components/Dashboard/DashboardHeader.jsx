@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import logotitle from "../../assets/logotitle.svg";
 import { getProjectList } from "../../features/projects/projectActions";
+import { useNavigate } from "react-router-dom";
 import {
   getCurrentUserProjects,
   getMemberList,
@@ -13,6 +14,7 @@ const { Header } = Layout;
 
 const DashboardHeader = () => {
   const [notiCount, setnotiCount] = useState(5);
+  const navigate = useNavigate();
   const openNotification = () => {
     setnotiCount(0);
     notification.open({
@@ -48,7 +50,12 @@ const DashboardHeader = () => {
               onClick={openNotification}
             />
           </Badge>
-          <Avatar icon={<UserOutlined />} />
+          <Avatar
+            src="https://thumbs.dreamstime.com/b/iron-man-17900674.jpg"
+            className=" cursor-pointer"
+            onClick={() => navigate("/dashboard/profile")}
+            icon={<UserOutlined />}
+          />
         </div>
       </div>
     </Header>

@@ -18,6 +18,7 @@ const ProjectPie = () => {
       value: 18,
     },
   ];
+
   const config = {
     appendPadding: 20,
     data,

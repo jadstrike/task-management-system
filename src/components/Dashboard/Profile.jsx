@@ -3,8 +3,10 @@ import { Avatar, Breadcrumb, Typography, Input, Form, Card } from "antd";
 const { Title } = Typography;
 import { EditTwoTone, ArrowLeftOutlined } from "@ant-design/icons";
 import ProjectHeader from "../UI/ProjectHeader";
+import { useNavigate } from "react-router-dom";
 
-const MemberProfile = () => {
+const Profile = () => {
+  const navigate = useNavigate();
   return (
     <>
       <ProjectHeader />
@@ -15,7 +17,9 @@ const MemberProfile = () => {
             <Breadcrumb
               items={[
                 {
-                  title: <a href="">Dashboard</a>,
+                  title: (
+                    <a onClick={() => navigate("/dashboard")}>Dashboard</a>
+                  ),
                 },
                 {
                   title: "Profile",
@@ -75,7 +79,7 @@ const MemberProfile = () => {
           </div>
           <div className="mt-3 font-robo">
             <Title level={5}>Activity</Title>
-            <div className="  mt-10  grid md:grid-cols-3 sm:grid-cols-2 gap-9">
+            <div className="  mt-10  grid md:grid-cols-3 sm:grid-cols-2 gap-5">
               <Card
                 title="Total Projects"
                 bordered={false}
@@ -120,4 +124,4 @@ const MemberProfile = () => {
   );
 };
 
-export default MemberProfile;
+export default Profile;

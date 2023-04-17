@@ -1,14 +1,51 @@
-import { Breadcrumb, Button, Typography, Table, Input, Popconfirm } from "antd";
+import {
+  Breadcrumb,
+  Button,
+  Typography,
+  Table,
+  Input,
+  Popconfirm,
+  Modal,
+  Form,
+  Select,
+} from "antd";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 const { Title } = Typography;
 
 const ProjectMembers = () => {
+  const [form] = Form.useForm();
   const project_members = useSelector(
     (state) => state.project.detail_project.users
   );
+  const old_members =
+    project_members !== null &&
+    project_members.map((member) => ({
+      label: member.username,
+      value: member.id,
+    }));
+  const new_members = useSelector((state) => state.member.members);
+
+  const options = new_members.map((member) => ({
+    label: member.username,
+    value: member.id,
+  }));
   const loading = useSelector((state) => state.project.loading);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    form.resetFields();
+  };
+  const handleSubmit = (userId) => {
+    console.log(userId);
+  };
+
   const navigate = useNavigate();
   console.log(project_members);
   const [searchedText, setSearchedText] = useState("");
@@ -110,6 +147,7 @@ const ProjectMembers = () => {
               borderRadius: 8,
               background: "#2F54EB",
             }}
+            onClick={showModal}
             className="p-4  m-4 flex items-center justify-center"
           >
             <div className=" text-white">Add a new member</div>
@@ -145,6 +183,26 @@ const ProjectMembers = () => {
           }}
         />
       </div>
+      <Modal
+        open={isModalOpen}
+        centered={true}
+        onCancel={handleCancel}
+        onOk={form.submit}
+        width={331}
+        okText="Add"
+      >
+        <div className=" m-3 p-3">
+          <Form
+            onFinish={handleSubmit}
+            form={form}
+            initialValues={old_members !== null && { userId: old_members }}
+          >
+            <Form.Item label="Members" name="userId">
+              <Select options={options} mode="multiple"></Select>
+            </Form.Item>
+          </Form>
+        </div>
+      </Modal>
     </div>
   );
 };

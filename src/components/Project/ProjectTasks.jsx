@@ -94,6 +94,7 @@ const ProjectTasks = () => {
         open={isModalOpen}
         onCancel={handleCancel}
         width={331}
+        className=" items-center"
       >
         <Title className="flex justify-center" level={5}>
           Add a new task

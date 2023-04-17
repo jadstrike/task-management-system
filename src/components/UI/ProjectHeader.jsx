@@ -20,7 +20,7 @@ const ProjectHeader = () => {
           height: "100%",
         }}
       >
-        <img src="src/assets/logotitle.svg" alt="" />
+        <img src="/src/assets/logotitle.svg" alt="" />
         <div className="flex space-x-5">
           <Badge count={"1"} size="small">
             <BellFilled
@@ -28,7 +28,12 @@ const ProjectHeader = () => {
               style={{ fontSize: "20px", color: "#fff" }}
             />
           </Badge>
-          <Avatar icon={<UserOutlined />} />
+          <Avatar
+            src="https://thumbs.dreamstime.com/b/iron-man-17900674.jpg"
+            onClick={() => navigate("/dashboard/profile")}
+            className=" cursor-pointer"
+            icon={<UserOutlined />}
+          />
         </div>
       </div>
     </Header>

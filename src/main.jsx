@@ -17,7 +17,7 @@ import "./index.css";
 import "./App.css";
 import ProjectDashboard from "./components/Project/ProjectDashboard";
 import ErrorPage from "./components/Error/ErrorPage";
-import MemberProfile from "./components/Dashboard/MemberProfile";
+import Profile from "./components/Dashboard/Profile";
 import ProjectTasks from "./components/Project/ProjectTasks";
 import ProjectMembers from "./components/Project/ProjectMembers";
 import Dnd from "./components/dnd-test";
@@ -28,6 +28,7 @@ const router = createBrowserRouter([
     element: <Login />,
     errorElement: <NotFound />,
   },
+
   {
     path: "/dashboard",
     element: <Dashboard />,
@@ -56,8 +57,8 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/dashboard/memberprofile",
-    element: <MemberProfile />,
+    path: "/dashboard/profile",
+    element: <Profile />,
   },
   {
     path: "/dnd",
