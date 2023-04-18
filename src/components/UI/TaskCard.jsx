@@ -1,5 +1,6 @@
 import { Card, Tag, Avatar } from "antd";
 import { useSelector } from "react-redux";
+import moment from "moment";
 import {
   DashOutlined,
   CalendarOutlined,
@@ -8,6 +9,7 @@ import {
 const TaskCard = (props) => {
   //   console.log("Props", title);
   //   console.log("Props", description);
+  const formattedDate = moment.utc(props.dueDate).format("DD/MM/YYYY");
   return (
     <Card
       style={{
@@ -15,7 +17,7 @@ const TaskCard = (props) => {
       }}
       headStyle={{ border: "none" }}
       className=" mb-2 mt-3"
-      title={props.title !== null ? props.title : "No Title"}
+      title={props.title !== undefined ? props.title : "No Title"}
       extra={<DashOutlined onClick={() => alert("You clicked three dots")} />}
       size="small"
     >
@@ -28,16 +30,29 @@ const TaskCard = (props) => {
           </div>
           <div className=" space-x-1 text-[#000000D9] mt-1">
             <CalendarOutlined />
-            <span>12-12-2023</span>
+            <span>{formattedDate}</span>
           </div>
-          <Tag className=" mt-1" color="success">
-            High
+          <Tag
+            className=" mt-1"
+            color={
+              props.priorityStatus === "HIGH"
+                ? "success"
+                : props.priorityStatus === "LOW"
+                ? "error"
+                : props.priorityStatus === "MEDIUM"
+                ? "warning"
+                : "default"
+            }
+          >
+            {props.priorityStatus}
           </Tag>
         </div>
         <div>
           <div className=" flex flex-col justify-center items-center">
-            <Avatar icon={<UserOutlined />} />
-            <div className=" text-[12px]">Tony Stark</div>
+            <Avatar className=" mb-1" icon={<UserOutlined />} />
+            <div className=" text-[12px]">
+              {props.username !== undefined && props.username}
+            </div>
           </div>
         </div>
       </div>

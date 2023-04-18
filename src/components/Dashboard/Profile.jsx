@@ -47,10 +47,10 @@ const Profile = () => {
             <Title level={4} className=" mt-4">
               About me
             </Title>
-            <Form className=" py-3 my-3">
-              <Form.Item>
+            <Form className=" py-3 my-3" initialValues={{ username: "inn" }}>
+              <Form.Item name="username">
                 <div className="flex flex-row">
-                  <Input style={{ borderRadius: "1px" }} placeholder="Name" />
+                  <Input style={{ borderRadius: "1px" }} />
                   <EditTwoTone
                     style={{ fontSize: "1.3rem" }}
                     className=" pt-1 pl-2"

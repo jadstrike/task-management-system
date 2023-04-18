@@ -3,6 +3,7 @@ import {
   createProject,
   createTask,
   DeleteProject,
+  getDoneTasks,
   getInProgressTasks,
   getProjectDetail,
   getProjectList,
@@ -21,6 +22,7 @@ const initialState = {
   project_tasks: null,
   project_in_progress_tasks: null,
   project_to_do_tasks: null,
+  project_done_tasks: null,
 
   deleteMessage: null,
 };
@@ -200,6 +202,25 @@ export const projectSlice = createSlice({
       // state.projects_list = payload;
     });
     builder.addCase(getToDoTasks.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+      console.log(state.error);
+      state.success = false;
+    });
+    //GET DONE TASKS
+    builder.addCase(getDoneTasks.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(getDoneTasks.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.success = true;
+      state.project_done_tasks = payload;
+      // console.log(payload);
+      // state.projects_list = payload;
+    });
+    builder.addCase(getDoneTasks.rejected, (state, { payload }) => {
       state.loading = false;
       state.error = payload;
       console.log(state.error);

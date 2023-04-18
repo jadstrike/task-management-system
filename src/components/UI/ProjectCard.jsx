@@ -23,6 +23,7 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   DeleteProject,
+  getDoneTasks,
   getInProgressTasks,
   getProjectDetail,
   getProjectTasks,
@@ -108,6 +109,7 @@ const ProjectCard = ({ item, index, id, fcolor, scolor }) => {
     dispatch(getProjectDetail(projectId));
     dispatch(getInProgressTasks(projectId));
     dispatch(getToDoTasks(projectId));
+    dispatch(getDoneTasks(projectId));
     // dispatch(getProjectTasks(projectId));
     navigate("/ProjectDashboard");
   };

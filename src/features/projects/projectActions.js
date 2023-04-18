@@ -224,7 +224,7 @@ export const getInProgressTasks = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `${backendURL}/api/InProgressList/${id}`,
+        `${backendURL}/api/inProgressList/${id}`,
 
         config
       );
@@ -254,6 +254,35 @@ export const getToDoTasks = createAsyncThunk(
       };
       const { data } = await axios.get(
         `${backendURL}/api/toDoList/${id}`,
+
+        config
+      );
+      //store user's token in local storage
+      // console.log(data);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return error.response.data.message;
+      } else {
+        return error.message;
+      }
+    }
+  }
+);
+
+//GET DONE Tasks In Project
+export const getDoneTasks = createAsyncThunk(
+  "project/getDoneTasks",
+  async (id) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization,
+        },
+      };
+      const { data } = await axios.get(
+        `${backendURL}/api/doneList/${id}`,
 
         config
       );
