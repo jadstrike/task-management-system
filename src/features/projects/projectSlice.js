@@ -3,8 +3,11 @@ import {
   createProject,
   createTask,
   DeleteProject,
+  getInProgressTasks,
   getProjectDetail,
   getProjectList,
+  getProjectTasks,
+  getToDoTasks,
   updateProject,
 } from "./projectActions";
 
@@ -15,6 +18,9 @@ const initialState = {
   success: false,
   detail_project: null,
   refresh: null,
+  project_tasks: null,
+  project_in_progress_tasks: null,
+  project_to_do_tasks: null,
 
   deleteMessage: null,
 };
@@ -135,6 +141,65 @@ export const projectSlice = createSlice({
       // state.projects_list = payload;
     });
     builder.addCase(createTask.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+      console.log(state.error);
+      state.success = false;
+    });
+
+    //GET TASKS IN PROJECT
+    builder.addCase(getProjectTasks.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(getProjectTasks.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.success = true;
+      state.project_tasks = payload;
+      // console.log(payload);
+      // state.projects_list = payload;
+    });
+    builder.addCase(getProjectTasks.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+      console.log(state.error);
+      state.success = false;
+    });
+
+    //GET In Progress TASKS IN PROJECT
+    builder.addCase(getInProgressTasks.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(getInProgressTasks.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.success = true;
+      state.project_in_progress_tasks = payload;
+      // console.log(payload);
+      // state.projects_list = payload;
+    });
+    builder.addCase(getInProgressTasks.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+      console.log(state.error);
+      state.success = false;
+    });
+    //GET TO DO TASKS
+    builder.addCase(getToDoTasks.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(getToDoTasks.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.success = true;
+      state.project_to_do_tasks = payload;
+      // console.log(payload);
+      // state.projects_list = payload;
+    });
+    builder.addCase(getToDoTasks.rejected, (state, { payload }) => {
       state.loading = false;
       state.error = payload;
       console.log(state.error);

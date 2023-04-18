@@ -9,13 +9,16 @@ import {
   Form,
   Select,
 } from "antd";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { updateProject } from "../../features/projects/projectActions";
 const { Title } = Typography;
 
 const ProjectMembers = () => {
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const detail_project = useSelector((state) => state.project.detail_project);
   const project_members = useSelector(
     (state) => state.project.detail_project.users
   );
@@ -43,7 +46,15 @@ const ProjectMembers = () => {
     form.resetFields();
   };
   const handleSubmit = (userId) => {
-    console.log(userId);
+    const userIds = Object.values(userId)[0];
+    console.log(userIds);
+    const submitValues = {
+      title: detail_project.title,
+      description: detail_project.description,
+      userId: userIds,
+      id: detail_project.id,
+    };
+    dispatch(updateProject(submitValues));
   };
 
   const navigate = useNavigate();
@@ -197,7 +208,12 @@ const ProjectMembers = () => {
             form={form}
             initialValues={old_members !== null && { userId: old_members }}
           >
-            <Form.Item label="Members" name="userId">
+            <Form.Item
+              required={true}
+              colon={false}
+              label="Members"
+              name="userId"
+            >
               <Select options={options} mode="multiple"></Select>
             </Form.Item>
           </Form>

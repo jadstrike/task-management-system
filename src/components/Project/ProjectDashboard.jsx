@@ -5,10 +5,11 @@ import ProjectCard from "../UI/ProjectCard";
 import ProjectContent from "./ProjectTasks";
 import { useSelector } from "react-redux";
 import MySpin from "../Dashboard/MySpin";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 const { Header, Content, Footer } = Layout;
 const ProjectDashboard = () => {
+  const navigate = useNavigate();
   const project_detail = useSelector((state) => state.project.detail_project);
 
   return (
@@ -37,7 +38,11 @@ const ProjectDashboard = () => {
                 style={{ fontSize: "20px", color: "#fff" }}
               />
             </Badge>
-            <Avatar icon={<UserOutlined />} />
+            <Avatar
+              className=" cursor-pointer"
+              onClick={() => navigate("/dashboard/profile")}
+              icon={<UserOutlined />}
+            />
           </div>
         </div>
       </Header>

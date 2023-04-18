@@ -23,7 +23,10 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   DeleteProject,
+  getInProgressTasks,
   getProjectDetail,
+  getProjectTasks,
+  getToDoTasks,
   updateProject,
 } from "../../features/projects/projectActions";
 
@@ -80,6 +83,7 @@ const ProjectCard = ({ item, index, id, fcolor, scolor }) => {
         userId: userIds,
         id: projectId,
       };
+      // console.log("Update values:", updateValues);
       dispatch(updateProject(updateValues));
     }
 
@@ -102,6 +106,9 @@ const ProjectCard = ({ item, index, id, fcolor, scolor }) => {
   const toprojectdashboard = () => {
     setCardOpen(true);
     dispatch(getProjectDetail(projectId));
+    dispatch(getInProgressTasks(projectId));
+    dispatch(getToDoTasks(projectId));
+    // dispatch(getProjectTasks(projectId));
     navigate("/ProjectDashboard");
   };
 

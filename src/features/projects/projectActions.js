@@ -182,3 +182,90 @@ export const createTask = createAsyncThunk(
     }
   }
 );
+
+//GET ALL TASKS IN Project
+export const getProjectTasks = createAsyncThunk(
+  "project/getProjectTasks",
+  async (id) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization,
+        },
+      };
+      const { data } = await axios.get(
+        `${backendURL}/api/getTasks/${id}`,
+
+        config
+      );
+      //store user's token in local storage
+      // console.log(data);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return error.response.data.message;
+      } else {
+        return error.message;
+      }
+    }
+  }
+);
+
+//GET In Progrss TASKS IN Project
+export const getInProgressTasks = createAsyncThunk(
+  "project/getInProgressTasks",
+  async (id) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization,
+        },
+      };
+      const { data } = await axios.get(
+        `${backendURL}/api/InProgressList/${id}`,
+
+        config
+      );
+      //store user's token in local storage
+      // console.log(data);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return error.response.data.message;
+      } else {
+        return error.message;
+      }
+    }
+  }
+);
+
+//GET To Do Tasks In Project
+export const getToDoTasks = createAsyncThunk(
+  "project/getToDoTasks",
+  async (id) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization,
+        },
+      };
+      const { data } = await axios.get(
+        `${backendURL}/api/toDoList/${id}`,
+
+        config
+      );
+      //store user's token in local storage
+      // console.log(data);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return error.response.data.message;
+      } else {
+        return error.message;
+      }
+    }
+  }
+);
