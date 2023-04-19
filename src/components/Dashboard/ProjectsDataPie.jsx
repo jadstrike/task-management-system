@@ -10,11 +10,11 @@ const ProjectPie = () => {
       value: 27,
     },
     {
-      type: "Done",
+      type: "Completed",
       value: 25,
     },
     {
-      type: "To Do",
+      type: "Incomplete",
       value: 18,
     },
   ];

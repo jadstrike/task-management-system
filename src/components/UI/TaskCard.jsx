@@ -6,6 +6,7 @@ import {
   CalendarOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { Draggable } from "react-beautiful-dnd";
 const TaskCard = (props) => {
   //   console.log("Props", title);
   //   console.log("Props", description);
@@ -14,6 +15,7 @@ const TaskCard = (props) => {
     <Card
       style={{
         width: 231,
+        borderColor: `${props.borderColor}`,
       }}
       headStyle={{ border: "none" }}
       className=" mb-2 mt-3"
@@ -36,9 +38,9 @@ const TaskCard = (props) => {
             className=" mt-1"
             color={
               props.priorityStatus === "HIGH"
-                ? "success"
-                : props.priorityStatus === "LOW"
                 ? "error"
+                : props.priorityStatus === "LOW"
+                ? "success"
                 : props.priorityStatus === "MEDIUM"
                 ? "warning"
                 : "default"
@@ -51,7 +53,9 @@ const TaskCard = (props) => {
           <div className=" flex flex-col justify-center items-center">
             <Avatar className=" mb-1" icon={<UserOutlined />} />
             <div className=" text-[12px]">
-              {props.username !== undefined && props.username}
+              {props.username === null
+                ? "Unassigned"
+                : props.username !== undefined && props.username}
             </div>
           </div>
         </div>

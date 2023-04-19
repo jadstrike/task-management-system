@@ -298,3 +298,32 @@ export const getDoneTasks = createAsyncThunk(
     }
   }
 );
+
+//GET Failed Tasks In Project
+export const getFailedTasks = createAsyncThunk(
+  "project/getFailedTasks",
+  async (id) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization,
+        },
+      };
+      const { data } = await axios.get(
+        `${backendURL}/api/failedList/${id}`,
+
+        config
+      );
+      //store user's token in local storage
+      // console.log(data);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return error.response.data.message;
+      } else {
+        return error.message;
+      }
+    }
+  }
+);

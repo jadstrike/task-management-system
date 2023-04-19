@@ -8,6 +8,8 @@ import {
   DatePicker,
   Select,
   Dropdown,
+  Tag,
+  Drawer,
 } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 const { Title } = Typography;
@@ -16,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import Tasks from "./Tasks";
+import { DragDropContext } from "react-beautiful-dnd";
 import { createTask } from "../../features/projects/projectActions";
 
 const ProjectTasks = () => {
@@ -30,21 +33,30 @@ const ProjectTasks = () => {
   //Filter Items
   const items = [
     {
-      label: <a>High</a>,
+      label: <Tag color={"error"}>HIGH</Tag>,
       key: "0",
     },
     {
-      label: <a>Low</a>,
+      label: <Tag color={"warning"}>MEDIUM</Tag>,
       key: "1",
     },
     {
-      label: <a>Medium</a>,
+      label: <Tag color={"success"}>LOW</Tag>,
       key: "3",
     },
   ];
   //Filter Items
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const showDrawer = () => {
+    setIsDrawerOpen(true);
+  };
+
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+  };
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -94,7 +106,7 @@ const ProjectTasks = () => {
             Tasks
           </Title>
           <Button
-            onClick={showModal}
+            onClick={showDrawer}
             style={{
               width: 139,
               height: 40,
@@ -113,68 +125,75 @@ const ProjectTasks = () => {
           <DownOutlined size="small" className=" mt-1 pl-1" />
         </div>
       </Dropdown>
-
       <Tasks />
 
-      <Modal
-        centered={true}
-        footer={null}
-        open={isModalOpen}
-        onCancel={handleCancel}
-        width={331}
-        className=" items-center"
+      <Drawer
+        title="Create Tasks"
+        placement="right"
+        onClose={closeDrawer}
+        open={isDrawerOpen}
       >
         <Title className="flex justify-center" level={5}>
           Add a new task
         </Title>
-        <Form onFinish={handleTaskCreate} className="pt-4 mt-4">
-          <Form.Item name="title" label="Title">
-            <Input placeholder="Task title"></Input>
-          </Form.Item>
-          <Form.Item label="Desc" name="description">
-            <Input placeholder="Task Description"></Input>
-          </Form.Item>
-          <Form.Item label="Due" name="dueDate">
-            <DatePicker
-              disabledDate={disableDate}
-              style={{ width: "100%" }}
-              showToday={false}
-              showTime={false}
-              placeholder="Due Date: DD/MM/YY"
-            />
-          </Form.Item>
-          <Form.Item name="userId" label="Assign">
-            <Select
-              // showSearch
-              options={options}
-              placeholder="Assign Members :"
-            ></Select>
-          </Form.Item>
-          <Form.Item name="priorityStatus" label="Priority">
-            <Select placeholder="Priority">
-              <Option value="HIGH">High</Option>
-              <Option value="MEDIUM">Medium</Option>
-              <Option value="LOW">Low</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item>
-            <Button
-              // loading={isLoading}
-              style={{
-                width: "277px",
-                backgroundColor: "#597EF7",
-                border: "1px solid #1890FF",
-                borderRadius: "1px",
-              }}
-              type="primary"
-              htmlType="submit"
-            >
-              {/* {isLoading ? "Creating member account.." : "Create"} */}
-              Create
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+        <div className=" flex flex-col justify-center items-center ">
+          <Form onFinish={handleTaskCreate} className=" pt-4 mt-4">
+            <Form.Item name="title">
+              <Input
+                style={{ width: "280px", borderRadius: "1px" }}
+                placeholder="Task title"
+              ></Input>
+            </Form.Item>
+            <Form.Item name="description">
+              <Input
+                style={{ width: "280px", borderRadius: "1px" }}
+                placeholder="Task Description"
+              ></Input>
+            </Form.Item>
+            <Form.Item name="dueDate">
+              <DatePicker
+                style={{ width: "280px", borderRadius: "1px" }}
+                disabledDate={disableDate}
+                showToday={false}
+                showTime={false}
+                placeholder="Due Date: DD/MM/YY"
+              />
+            </Form.Item>
+            <Form.Item name="userId">
+              <Select
+                // showSearch
+                options={options}
+                placeholder="Assign Members :"
+              ></Select>
+            </Form.Item>
+            <Form.Item name="priorityStatus">
+              <Select placeholder="Priority :">
+                <Select.Option value="HIGH">High</Select.Option>
+                <Select.Option value="MEDIUM">Medium</Select.Option>
+                <Select.Option value="LOW">Low</Select.Option>
+              </Select>
+            </Form.Item>
+            <Form.Item>
+              <Button
+                // loading={isLoading}
+                style={{
+                  backgroundColor: "#597EF7",
+                  width: "280px",
+
+                  border: "1px solid",
+
+                  borderRadius: "1px",
+                }}
+                type="primary"
+                htmlType="submit"
+              >
+                {/* {isLoading ? "Creating member account.." : "Create"} */}
+                Create
+              </Button>
+            </Form.Item>
+          </Form>
+        </div>
+      </Drawer>
     </div>
   );
 };
