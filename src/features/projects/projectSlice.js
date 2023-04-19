@@ -33,7 +33,11 @@ const initialState = {
 export const projectSlice = createSlice({
   name: "project",
   initialState,
-  reducers: {},
+  reducers: {
+    setTaskEdit: (state, action) => {
+      state.taskEdit = true;
+    },
+  },
   extraReducers: (builder) => {
     //CREATE Project
     builder.addCase(createProject.pending, (state) => {
@@ -251,5 +255,7 @@ export const projectSlice = createSlice({
     });
   },
 });
+
+export const { setTaskEdit } = projectSlice.actions;
 
 export default projectSlice.reducer;

@@ -48,7 +48,7 @@ const Profile = () => {
               About me
             </Title>
             <Form className=" py-3 my-3">
-              <Form.Item name="username">
+              <Form.Item name="username" initialValue={"inn"}>
                 <div className="flex flex-row">
                   <Input name="username" style={{ borderRadius: "1px" }} />
                   <EditTwoTone

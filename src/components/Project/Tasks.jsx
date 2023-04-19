@@ -13,22 +13,24 @@ const Tasks = () => {
   const Done = useSelector((state) => state.project.project_done_tasks);
   const Failed = useSelector((state) => state.project.project_failed_tasks);
   const handleOnDragEnd = (result) => {
+    console.log(result);
+    const { source, destination } = result;
     // TODO: Implement logic to update task status based on drag and drop
   };
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <div className="  ml-4 mt-4 flex flex-row justify-evenly items-start space-x-2 font-robo  ">
-        <Droppable droppableId="ToDo">
-          {(provided) => (
-            <div
-              className="  bg-[#F5F5F5] w-[263px]  border border-solid border-gray-300 rounded-lg flex flex-col justify-center items-center"
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-            >
-              <div className="w-full ml-5 mt-4 text-left">
-                <div className=" text-42px ">To Do</div>
-              </div>
-              <div className="mt-2 max-h-[500px] overflow-y-scroll">
+        <div className="  bg-[#F5F5F5] w-[263px]  border border-solid border-gray-300 rounded-md flex flex-col justify-center items-center">
+          <div className="w-full ml-5 mt-4 text-left">
+            <div className=" text-42px  ">To Do</div>
+          </div>
+          <Droppable droppableId="Todo">
+            {(provided) => (
+              <div
+                className="mt-2 max-h-[500px] overflow-y-scroll"
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
                 {ToDo !== undefined && ToDo.length !== 0 ? (
                   ToDo.map((task, index) => (
                     <Draggable
@@ -58,11 +60,11 @@ const Tasks = () => {
                 ) : (
                   <NoTasks />
                 )}
+                {provided.placeholder}
               </div>
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
+            )}
+          </Droppable>
+        </div>
 
         <div className="  bg-[#E6F7FF] w-[263px]  border border-solid border-blue-300 rounded-md flex flex-col justify-center items-center">
           <div className="w-full ml-5 mt-4 text-left">

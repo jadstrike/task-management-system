@@ -25,6 +25,8 @@ const ProjectTasks = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const project_detail = useSelector((state) => state.project.detail_project);
+  const isTaskEdit = useSelector((state) => state.project.taskEdit);
+  console.log(isTaskEdit);
   // console.log(project_detail.users);
   const options = project_detail.users.map((member) => ({
     label: member.username,
@@ -46,7 +48,7 @@ const ProjectTasks = () => {
     },
   ];
   //Filter Items
-
+  isTaskEdit ? setIsDrawerOpen(true) : null;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -128,7 +130,7 @@ const ProjectTasks = () => {
       <Tasks />
 
       <Drawer
-        title="Create Tasks"
+        title={isTaskEdit ? "Edit Task" : "Create Tasks"}
         placement="right"
         onClose={closeDrawer}
         open={isDrawerOpen}

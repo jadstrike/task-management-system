@@ -1,5 +1,5 @@
 import { Card, Tag, Avatar } from "antd";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import moment from "moment";
 import {
   DashOutlined,
@@ -7,7 +7,9 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Draggable } from "react-beautiful-dnd";
+import { setTaskEdit } from "../../features/projects/projectSlice";
 const TaskCard = (props) => {
+  const dispatch = useDispatch();
   //   console.log("Props", title);
   //   console.log("Props", description);
   const formattedDate = moment.utc(props.dueDate).format("DD/MM/YYYY");
@@ -20,7 +22,7 @@ const TaskCard = (props) => {
       headStyle={{ border: "none" }}
       className=" mb-2 mt-3"
       title={props.title !== undefined ? props.title : "No Title"}
-      extra={<DashOutlined onClick={() => alert("You clicked three dots")} />}
+      extra={<DashOutlined onClick={() => dispatch(setTaskEdit)} />}
       size="small"
     >
       <div className=" flex flex-row justify-between items-center">
