@@ -30,7 +30,7 @@ const ProjectDashboard = () => {
             height: "100%",
           }}
         >
-          <img src="src/assets/logotitle.svg" alt="" />
+          <img src="/logotitle.svg" alt="" />
           <div className="flex space-x-5">
             <Badge count={"1"} size="small">
               <BellFilled

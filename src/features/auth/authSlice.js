@@ -12,6 +12,7 @@ const initialState = {
   loading: false,
   userInfo: null,
   userToken, //for storing JWT
+  imgurl: null,
   role: null,
   error: null,
   success: false,
@@ -68,7 +69,10 @@ export const authSlice = createSlice({
       state.loading = false;
       state.success = true;
       state.role = payload[0].roleName;
+      state.imgurl = payload[0].imgUrl;
+
       console.log(state.role);
+      console.log(state.imgurl);
     });
     builder.addCase(getCurrentUserRole.rejected, (state, { payload }) => {
       state.loading = false;

@@ -10,6 +10,10 @@ import { Draggable } from "react-beautiful-dnd";
 import { setTaskEdit } from "../../features/projects/projectSlice";
 const TaskCard = (props) => {
   const dispatch = useDispatch();
+  const taskedit = () => {
+    console.log("Task Edit");
+    dispatch(setTaskEdit(true));
+  };
   //   console.log("Props", title);
   //   console.log("Props", description);
   const formattedDate = moment.utc(props.dueDate).format("DD/MM/YYYY");
@@ -22,7 +26,7 @@ const TaskCard = (props) => {
       headStyle={{ border: "none" }}
       className=" mb-2 mt-3"
       title={props.title !== undefined ? props.title : "No Title"}
-      extra={<DashOutlined onClick={() => dispatch(setTaskEdit)} />}
+      extra={<DashOutlined onClick={() => taskedit()} />}
       size="small"
     >
       <div className=" flex flex-row justify-between items-center">

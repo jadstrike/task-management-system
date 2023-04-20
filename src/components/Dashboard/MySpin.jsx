@@ -7,7 +7,7 @@ const MySpin = ({ color }) => (
     indicator={<LoadingOutlined style={{ fontSize: 30, color }} spin />}
     style={{
       display: "flex",
-      height: "70vh",
+      height: "60vh",
       justifyContent: "center",
       alignItems: "center",
       color: "#2D2727",

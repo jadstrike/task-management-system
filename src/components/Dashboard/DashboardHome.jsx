@@ -77,7 +77,7 @@ const DashboardHome = () => {
           </Card>
         </div>
       </div>
-      <div className=" h-96  bg-gray-100">
+      <div className=" h-full bg-gray-100">
         <ProjectPie />
       </div>
       <Title className="m-4 p-4" level={5}>

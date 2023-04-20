@@ -35,7 +35,7 @@ export const projectSlice = createSlice({
   initialState,
   reducers: {
     setTaskEdit: (state, action) => {
-      state.taskEdit = true;
+      state.taskEdit = action.payload;
     },
   },
   extraReducers: (builder) => {

@@ -13,20 +13,30 @@ import {
 } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 const { Title } = Typography;
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import Tasks from "./Tasks";
 import { DragDropContext } from "react-beautiful-dnd";
 import { createTask } from "../../features/projects/projectActions";
+import { setTaskEdit } from "../../features/projects/projectSlice";
 
 const ProjectTasks = () => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const project_detail = useSelector((state) => state.project.detail_project);
   const isTaskEdit = useSelector((state) => state.project.taskEdit);
-  console.log(isTaskEdit);
+  useEffect(() => {
+    if (isTaskEdit) {
+      setIsDrawerOpen(true);
+    } else {
+      setIsDrawerOpen(false);
+    }
+  }, [isTaskEdit]);
+
   // console.log(project_detail.users);
   const options = project_detail.users.map((member) => ({
     label: member.username,
@@ -48,9 +58,7 @@ const ProjectTasks = () => {
     },
   ];
   //Filter Items
-  isTaskEdit ? setIsDrawerOpen(true) : null;
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  // isTaskEdit ? setIsDrawerOpen(true) : setIsDrawerOpen(false);
 
   const showDrawer = () => {
     setIsDrawerOpen(true);
@@ -58,6 +66,10 @@ const ProjectTasks = () => {
 
   const closeDrawer = () => {
     setIsDrawerOpen(false);
+    setTimeout(() => {
+      // your code here
+      dispatch(setTaskEdit(false));
+    }, 500);
   };
 
   const showModal = () => {
@@ -85,7 +97,7 @@ const ProjectTasks = () => {
     return current && current < moment().startOf("day");
   };
   return (
-    <div className="w-screen bg-[#FFFF]">
+    <div className="w-screen bg-[#FFFF] ">
       <Breadcrumb
         className="pt-3 pl3 mt-3 ml-3 "
         items={[
@@ -102,7 +114,11 @@ const ProjectTasks = () => {
           },
         ]}
       />
-      <div className=" h-88 border-b border-gray-400 border-solid border-t-0 border-r-0 border-l-0">
+
+      <div
+        style={{ width: "calc(100% - 200px)" }}
+        className=" h-88   border-b border-gray-400 border-solid border-t-0 border-r-0 border-l-0"
+      >
         <div className="flex flex-row items-center justify-between">
           <Title className="p-2 m-2 ml-5 pb-0 mb-0 pl-5" level={4}>
             Tasks
@@ -117,26 +133,29 @@ const ProjectTasks = () => {
             }}
             className="p-4  m-4 flex items-center justify-center"
           >
-            <div className=" text-white">Create Tasks</div>
+            <div className="   text-white">Create Tasks</div>
           </Button>
         </div>
       </div>
-      <Dropdown menu={{ items }} trigger={["click"]}>
-        <div className=" cursor-pointer hover:bg-slate-200 ml-10 mt-5  flex flex-row justify-center items-center border border-solid border-gray-300  w-[90px] h-[32px]">
-          <span className=" p-0 m-0 ">Filter By</span>
-          <DownOutlined size="small" className=" mt-1 pl-1" />
-        </div>
-      </Dropdown>
-      <Tasks />
+      <div className="">
+        <Dropdown menu={{ items }} trigger={["click"]}>
+          <div className=" cursor-pointer hover:bg-slate-200 ml-10 mt-5  flex flex-row justify-center items-center border border-solid border-gray-300  w-[90px] h-[32px]">
+            <span className=" p-0 m-0 ">Filter By</span>
+            <DownOutlined size="small" className=" mt-1 pl-1" />
+          </div>
+        </Dropdown>
+        <Tasks />
+      </div>
 
       <Drawer
-        title={isTaskEdit ? "Edit Task" : "Create Tasks"}
+        title={isTaskEdit ? "Edit Tasks" : "Create Tasks"}
+        forceRender={true}
         placement="right"
         onClose={closeDrawer}
         open={isDrawerOpen}
       >
         <Title className="flex justify-center" level={5}>
-          Add a new task
+          {isTaskEdit ? "Edit a task" : "Create a new task"}
         </Title>
         <div className=" flex flex-col justify-center items-center ">
           <Form onFinish={handleTaskCreate} className=" pt-4 mt-4">

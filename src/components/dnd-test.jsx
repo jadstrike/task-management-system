@@ -98,7 +98,7 @@ const Dnd = () => {
         </Card>
       </div>
       <div className=" flex items-center justify-evenly ">
-        <div className=" border border-solid rounded-lg border-gray-300   h-60 w-[551px]    ">
+        <div className=" border border-solid rounded-lg border-gray-300   h-52 w-[580px]    ">
           <div className=" flex flex-row items-center justify-between">
             <div className=" my-8 py-8 mx-4 px-4 font-robo">
               <Title
@@ -121,7 +121,7 @@ const Dnd = () => {
               />
             </div>
           </div>
-          <div className=" flex flex-row space-x-7 my-3 py-3 mx-3 px-3 justify-start font-robo">
+          <div className=" flex flex-row space-x-7 mb-2 pb-2 mx-3 px-3 justify-start font-robo">
             <div className=" flex flex-row space-x-1">
               <div className=" w-[16px] h-[16px] bg-gray-100"></div>
               <div>To Do</div>
@@ -136,7 +136,7 @@ const Dnd = () => {
             </div>
           </div>
         </div>
-        <div className=" border border-solid rounded-lg border-gray-300 h-60 w-[551px] ">
+        <div className=" border border-solid rounded-lg border-gray-300 h-52 w-[580px] ">
           <div className=" flex flex-row items-center justify-between">
             <div className=" my-8 py-8 mx-4 px-4 font-robo">
               <Title
@@ -159,7 +159,7 @@ const Dnd = () => {
               />
             </div>
           </div>
-          <div className=" flex  flex-row justify-start space-x-7 my-3 py-3 mx-3 px-3  font-robo">
+          <div className=" flex  flex-row justify-start space-x-7 mb-2 pb-2 mx-3 px-3  font-robo">
             <div className=" flex flex-row space-x-1">
               <div className=" w-[16px] h-[16px] bg-gray-100"></div>
               <div>To Do</div>
