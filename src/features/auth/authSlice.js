@@ -33,6 +33,11 @@ export const authSlice = createSlice({
       state.user_login_email = action.payload.email;
       state.user_login_pwd = action.payload.password;
     },
+    logout: (state) => {
+      state.isLoggedIn = false;
+      state.userInfo = null;
+      state.userToken = null;
+    },
   },
   extraReducers: (builder) => {
     //USER LOGIN
@@ -85,6 +90,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { remember } = authSlice.actions;
+export const { remember, logout } = authSlice.actions;
 
 export default authSlice.reducer;

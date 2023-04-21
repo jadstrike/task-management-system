@@ -24,7 +24,7 @@ const TaskCard = (props) => {
         borderColor: `${props.borderColor}`,
       }}
       headStyle={{ border: "none" }}
-      className=" mb-2 mt-3"
+      className=" mb-3 mt-3"
       title={props.title !== undefined ? props.title : "No Title"}
       extra={<DashOutlined onClick={() => taskedit()} />}
       size="small"

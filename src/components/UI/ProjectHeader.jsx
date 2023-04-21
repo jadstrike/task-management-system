@@ -1,8 +1,80 @@
-import { Badge, Layout, Avatar } from "antd";
+import { Badge, Layout, Avatar, Drawer, Form, message } from "antd";
+import { useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { BellFilled, UserOutlined } from "@ant-design/icons";
 const { Header } = Layout;
 
 const ProjectHeader = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const memberCount = useSelector((state) => state.content.memberCount);
+  const projectsCount = useSelector((state) => state.content.projectsCount);
+  const role = useSelector((state) => state.auth.role);
+  const [ProfileData, setProfileData] = useState(null);
+  const [isDisabled, setDisabled] = useState(true);
+  const [Loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  console.log("IsDiabled: ", isDisabled);
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+    setDisabled(true);
+  };
+
+  const backendURL = import.meta.env.VITE_API_URL;
+  const token = localStorage.getItem("token");
+  const Authorization = `Bearer ${token}`;
+
+  useEffect(() => {
+    role === "ROLE_ADMIN"
+      ? axios
+          .get(`${backendURL}/api/member/1`, {
+            headers: {
+              Authorization: Authorization,
+            },
+          })
+          .then((response) => {
+            setProfileData(response.data);
+            console.log(ProfileData);
+            // setLoading(false);
+            // handle successful response here
+          })
+          .catch((error) => {
+            console.log(error);
+            setLoading(false);
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: { error },
+            });
+
+            // handle error here
+          })
+      : axios
+          .get(`${backendURL}/api/member/2`, {
+            headers: {
+              Authorization: Authorization,
+            },
+          })
+          .then((response) => {
+            setProfileData(response.data);
+            console.log(ProfileData);
+            // setLoading(false);
+            // handle successful response here
+          })
+          .catch((error) => {
+            console.log(error);
+            setLoading(false);
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: { error },
+            });
+            // handle error here
+          });
+  }, [role]);
   return (
     <Header
       style={{

@@ -10,6 +10,7 @@ import { getCurrentUserRole } from "../../features/auth/authActions";
 import { getMemberList } from "../../features/member/memberActions";
 import { LoadingOutlined } from "@ant-design/icons";
 import MySpin from "./MySpin";
+import { GooSpinner } from "react-spinners-kit";
 
 const Dashboard = () => {
   const [api, context] = notification.useNotification();
@@ -74,7 +75,7 @@ const Dashboard = () => {
 
         <Layout>
           {loading ? (
-            <MySpin />
+            <GooSpinner size={30} color="#000000" />
           ) : (
             <>
               <DashboardSider />

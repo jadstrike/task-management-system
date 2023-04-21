@@ -97,9 +97,9 @@ const ProjectTasks = () => {
     return current && current < moment().startOf("day");
   };
   return (
-    <div className="w-screen bg-[#FFFF] ">
+    <div className="w-screen  bg-[#FFFF] ">
       <Breadcrumb
-        className="pt-3 pl3 mt-3 ml-3 "
+        className="pt-3 pl3 mt-3 ml-10 "
         items={[
           {
             title: (
@@ -116,7 +116,7 @@ const ProjectTasks = () => {
       />
 
       <div
-        style={{ width: "calc(100% - 200px)" }}
+        // style={{ width: "calc(100% - 200px)" }}
         className=" h-88   border-b border-gray-400 border-solid border-t-0 border-r-0 border-l-0"
       >
         <div className="flex flex-row items-center justify-between">
@@ -131,21 +131,19 @@ const ProjectTasks = () => {
               borderRadius: 8,
               background: "#2F54EB",
             }}
-            className="p-4  m-4 flex items-center justify-center"
+            className=" mr-52 flex items-center justify-center"
           >
-            <div className="   text-white">Create Tasks</div>
+            <div className=" text-white">Create Tasks</div>
           </Button>
         </div>
       </div>
-      <div className="">
-        <Dropdown menu={{ items }} trigger={["click"]}>
-          <div className=" cursor-pointer hover:bg-slate-200 ml-10 mt-5  flex flex-row justify-center items-center border border-solid border-gray-300  w-[90px] h-[32px]">
-            <span className=" p-0 m-0 ">Filter By</span>
-            <DownOutlined size="small" className=" mt-1 pl-1" />
-          </div>
-        </Dropdown>
-        <Tasks />
-      </div>
+      <Dropdown menu={{ items }} trigger={["click"]}>
+        <div className=" cursor-pointer hover:bg-slate-200 ml-10 mt-5  flex flex-row justify-center items-center border border-solid border-gray-300  w-[90px] h-[32px]">
+          <span className=" p-0 m-0 ">Filter By</span>
+          <DownOutlined size="small" className=" mt-1 pl-1" />
+        </div>
+      </Dropdown>
+      <Tasks />
 
       <Drawer
         title={isTaskEdit ? "Edit Tasks" : "Create Tasks"}

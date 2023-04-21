@@ -52,7 +52,7 @@ const ProjectDashboard = () => {
         }}
         className="mt-14"
       >
-        {project_detail.users !== null ? (
+        {project_detail !== null ? (
           <>
             <ProjectSider project_detail={project_detail} />
             <Outlet />
