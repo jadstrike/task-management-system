@@ -57,11 +57,15 @@ const ProjectCard = ({ item, index, id, fcolor, scolor }) => {
   const [isCardOpen, setCardOpen] = useState(true);
 
   const dispatch = useDispatch();
+  const role = useSelector((state) => state.auth.role);
   const member_list = useSelector((state) => state.member.members);
-  const options = member_list.map((member) => ({
-    label: member.username,
-    value: member.id,
-  }));
+  const options =
+    role === "ROLE_ADMIN"
+      ? member_list.map((member) => ({
+          label: member.username,
+          value: member.id,
+        }))
+      : null;
   const handleCancel = () => {
     form.resetFields();
     setIsModalOpen(false);
@@ -139,19 +143,40 @@ const ProjectCard = ({ item, index, id, fcolor, scolor }) => {
         key={id}
         title={item.title}
         extra={
-          <Dropdown placement="top" menu={{ items }} trigger={["click"]} arrow>
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setCardOpen(false);
-              }}
-              size="medium"
+          role === "ROLE_ADMIN" ? (
+            <Dropdown
+              placement="top"
+              menu={{ items }}
+              trigger={["click"]}
+              arrow
             >
-              <DashOutlined size={"large"} />
-            </Button>
-          </Dropdown>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setCardOpen(false);
+                }}
+                size="medium"
+              >
+                <DashOutlined size={"large"} />
+              </Button>
+            </Dropdown>
+          ) : null
         }
+        // extra={
+        //   <Dropdown placement="top" menu={{ items }} trigger={["click"]} arrow>
+        //     <Button
+        //       onClick={(e) => {
+        //         e.preventDefault();
+        //         e.stopPropagation();
+        //         setCardOpen(false);
+        //       }}
+        //       size="medium"
+        //     >
+        //       <DashOutlined size={"large"} />
+        //     </Button>
+        //   </Dropdown>
+        // }
         style={{
           height: 170,
           width: 288,
@@ -163,7 +188,7 @@ const ProjectCard = ({ item, index, id, fcolor, scolor }) => {
           borderRadius: 8,
         }}
       >
-        <p className="opacity-50 mt-0 mb-2">{item.description}</p>
+        <p className="   opacity-50 mt-0 mb-2">{item.description}</p>
         <span>
           <Avatar.Group
             maxCount={2}
@@ -198,108 +223,110 @@ const ProjectCard = ({ item, index, id, fcolor, scolor }) => {
         </span>
       </Card>
 
-      <Modal
-        title="Edit project"
-        open={isModalOpen}
-        onCancel={handleCancel}
-        footer={null}
-        width={332}
-        centered={true}
-        style={{ borderRadius: "1px" }}
-      >
-        <div className=" flex flex-col pt-1 mt-1  justify-center items-center">
-          <Form
-            form={form}
-            initialValues={
-              item.users !== null
-                ? {
-                    title: item.title,
-                    description: item.description,
+      {role === "ROLE_ADMIN" && (
+        <Modal
+          title="Edit project"
+          open={isModalOpen}
+          onCancel={handleCancel}
+          footer={null}
+          width={332}
+          centered={true}
+          style={{ borderRadius: "1px" }}
+        >
+          <div className=" flex flex-col pt-1 mt-1  justify-center items-center">
+            <Form
+              form={form}
+              initialValues={
+                item.users !== null
+                  ? {
+                      title: item.title,
+                      description: item.description,
 
-                    userId: defaultMember,
-                  }
-                : { title: item.title, description: item.description }
-            }
-            onFinish={onFinish}
-            layout="vertical"
-            name="create_form"
-          >
-            <Form.Item
-              className="pb-2 m-0"
-              label="Project Title"
-              required={false}
-              name="title"
-              rules={[
-                {
-                  required: true,
-                  type: "string",
-                  message: "Please input Project title",
-                },
-              ]}
+                      userId: defaultMember,
+                    }
+                  : { title: item.title, description: item.description }
+              }
+              onFinish={onFinish}
+              layout="vertical"
+              name="create_form"
             >
-              <Input style={{ borderRadius: "1px" }} />
-            </Form.Item>
-            <Form.Item
-              style={{
-                marginBottom: 0,
-              }}
-              label="Description"
-              name="description"
-              required={false}
-              rules={[
-                {
-                  required: true,
-                  type: "string",
-                  message: "Please input Project's description",
-                },
-              ]}
-              validateTrigger="onBlur"
-            >
-              <Input style={{ borderRadius: "1px" }} />
-            </Form.Item>
-            <p className="pt-1 mt-1">Members</p>
-            <div>
-              {item.users !== null &&
-                item.users.map((project) => {
-                  <div className="pb-2">
-                    <Avatar size={"small"} />
-                    <span className="pl-3">{project.username}</span>
-                    <CloseOutlined
-                      onClick={() => {
-                        console.log("hehe");
-                      }}
-                      className="pl-3"
-                    />
-                  </div>;
-                })}
-            </div>
-            <Form.Item required={true} name="userId">
-              <Select
-                mode="multiple"
-                showSearch
-                options={options}
-                placeholder="+ Add members"
-              ></Select>
-            </Form.Item>
-            <Form.Item>
-              <Button
-                // loading={isLoading}
-                style={{
-                  width: "277px",
-                  backgroundColor: "#597EF7",
-                  border: "1px solid #1890FF",
-                  borderRadius: "1px",
-                }}
-                type="primary"
-                htmlType="submit"
+              <Form.Item
+                className="pb-2 m-0"
+                label="Project Title"
+                required={false}
+                name="title"
+                rules={[
+                  {
+                    required: true,
+                    type: "string",
+                    message: "Please input Project title",
+                  },
+                ]}
               >
-                {/* {isLoading ? "Creating member account.." : "Create"} */}
-                Save
-              </Button>
-            </Form.Item>
-          </Form>
-        </div>
-      </Modal>
+                <Input style={{ borderRadius: "1px" }} />
+              </Form.Item>
+              <Form.Item
+                style={{
+                  marginBottom: 0,
+                }}
+                label="Description"
+                name="description"
+                required={false}
+                rules={[
+                  {
+                    required: true,
+                    type: "string",
+                    message: "Please input Project's description",
+                  },
+                ]}
+                validateTrigger="onBlur"
+              >
+                <Input style={{ borderRadius: "1px" }} />
+              </Form.Item>
+              <p className="pt-1 mt-1">Members</p>
+              <div>
+                {item.users !== null &&
+                  item.users.map((project) => {
+                    <div className="pb-2">
+                      <Avatar size={"small"} />
+                      <span className="pl-3">{project.username}</span>
+                      <CloseOutlined
+                        onClick={() => {
+                          console.log("hehe");
+                        }}
+                        className="pl-3"
+                      />
+                    </div>;
+                  })}
+              </div>
+              <Form.Item required={true} name="userId">
+                <Select
+                  mode="multiple"
+                  showSearch
+                  options={options}
+                  placeholder="+ Add members"
+                ></Select>
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  // loading={isLoading}
+                  style={{
+                    width: "277px",
+                    backgroundColor: "#597EF7",
+                    border: "1px solid #1890FF",
+                    borderRadius: "1px",
+                  }}
+                  type="primary"
+                  htmlType="submit"
+                >
+                  {/* {isLoading ? "Creating member account.." : "Create"} */}
+                  Save
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

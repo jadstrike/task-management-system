@@ -165,6 +165,8 @@ export const DetailMember = createAsyncThunk(
   }
 );
 
+//CurrentUserProjects
+
 export const getCurrentUserProjects = createAsyncThunk(
   "member/getCurrentUserProjects",
   async () => {

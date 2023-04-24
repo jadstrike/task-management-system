@@ -1,9 +1,21 @@
-import { Badge, Layout, Avatar, Drawer, Form, message } from "antd";
+import {
+  Badge,
+  Layout,
+  Avatar,
+  Drawer,
+  Form,
+  message as antdMessage,
+  Typography,
+  Input,
+  Button,
+} from "antd";
+const { Title } = Typography;
 import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { BellFilled, UserOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import { BellFilled, UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import Swal from "sweetalert2";
 const { Header } = Layout;
 
@@ -13,6 +25,7 @@ const ProjectHeader = () => {
   const memberCount = useSelector((state) => state.content.memberCount);
   const projectsCount = useSelector((state) => state.content.projectsCount);
   const role = useSelector((state) => state.auth.role);
+  const role_id = useSelector((state) => state.auth.role_id);
   const [ProfileData, setProfileData] = useState(null);
   const [isDisabled, setDisabled] = useState(true);
   const [Loading, setLoading] = useState(false);
@@ -39,34 +52,72 @@ const ProjectHeader = () => {
       imgUrl: formdata.imgurl,
       positionId: 1,
     };
+
+    const member_update_data = {
+      username: formdata.username,
+      email: formdata.email,
+      imgurl: formdata.imgurl,
+      positionId: role_id,
+    };
     console.log(data);
     setLoading(true);
-    axios
-      .put(`${backendURL}/api/updateAdmin/1`, data, {
-        headers: {
-          Authorization: Authorization,
-        },
-      })
-      .then((response) => {
-        setLoading(false);
-        setProfileData(response.data);
-        console.log(ProfileData);
-        message.success("Profile Updated Successfully");
-        setDisabled(true);
-        // handle successful response here
-      })
-      .catch((error) => {
-        console.log(error.response.data.message);
-        const error_message = error.data.message;
-        setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: error_message,
-        });
 
-        // handle error here
-      });
+    role === "ROLE_ADMIN"
+      ? axios
+          .put(`${backendURL}/api/updateAdmin/1`, data, {
+            headers: {
+              Authorization: Authorization,
+            },
+          })
+          .then((response) => {
+            setLoading(false);
+            setProfileData(response.data);
+            console.log(ProfileData);
+            antdMessage.success("Profile Updated Successfully");
+            setDisabled(true);
+            // handle successful response here
+          })
+          .catch((error) => {
+            console.log(error.response.data.message);
+            const error_message = error.data.message;
+            setLoading(false);
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: error_message,
+            });
+            // handle error here
+          })
+      : axios
+          .put(
+            `${backendURL}/api/updateMember/${role_id}`,
+            member_update_data,
+            {
+              headers: {
+                Authorization: Authorization,
+              },
+            }
+          )
+          .then((response) => {
+            setLoading(false);
+            setProfileData(response.data);
+            console.log(ProfileData);
+            antdMessage.success("Profile Updated Successfully");
+            setDisabled(true);
+            // handle successful response here
+          })
+
+          .catch((error) => {
+            // console.log(error.response.data.message);
+            const error_message = error.data.message;
+            setLoading(false);
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: error_message,
+            });
+            // handle error here
+          });
 
     // setLoading(true);
   };
@@ -104,14 +155,15 @@ const ProjectHeader = () => {
             // handle error here
           })
       : axios
-          .get(`${backendURL}/api/member/2`, {
+          .get(`${backendURL}/api/member/${role_id}`, {
             headers: {
               Authorization: Authorization,
             },
           })
           .then((response) => {
             setProfileData(response.data);
-            console.log(ProfileData);
+
+            // console.log(ProfileData);
             // setLoading(false);
             // handle successful response here
           })
@@ -160,7 +212,7 @@ const ProjectHeader = () => {
               <Avatar
                 size={40}
                 src="https://thumbs.dreamstime.com/b/iron-man-17900674.jpg"
-                onClick={() => navigate("/dashboard/profile")}
+                onClick={() => setIsDrawerOpen(true)}
                 className=" cursor-pointer"
                 icon={<UserOutlined />}
               />

@@ -25,6 +25,7 @@ import MySpin from "./MySpin";
 const ProjectsLists = () => {
   const success = useSelector((state) => state.project.success);
   const refresh = useSelector((state) => state.project.refresh);
+  const member_projects = useSelector((state) => state.member.member_projects);
   const member_list = useSelector((state) => state.member.members);
   const project_loading = useSelector((state) => state.project.loading);
   const member_loading = useSelector((state) => state.member.loading);
@@ -50,10 +51,18 @@ const ProjectsLists = () => {
   const project_list = useSelector((state) => state.project.projects_list);
   console.log(project_list);
 
-  const options = member_list.map((member) => ({
-    label: member.username,
-    value: member.id,
-  }));
+  // const options = member_list.map((member) => ({
+  //   label: member.username,
+  //   value: member.id,
+  // }));
+
+  const options =
+    role === "ROLE_ADMIN"
+      ? member_list.map((member) => ({
+          label: member.username,
+          value: member.id,
+        }))
+      : null;
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -69,7 +78,8 @@ const ProjectsLists = () => {
     success && form.resetFields();
   };
   useEffect(() => {
-    dispatch(getProjectList());
+    role === "ROLE_ADMIN" && dispatch(getProjectList());
+    role === "ROLE_USER" && dispatch(getCurrentUserProjects());
   }, [refresh, deleteMessage]);
 
   const doneF = "#03C988";
@@ -80,6 +90,9 @@ const ProjectsLists = () => {
 
   const inprogressF = "#40A9FF";
   const inprogressS = "#C9EEFF";
+
+  const incompleteF = "#F5222D";
+  const incompleteS = "#FCF0F0";
   return (
     <>
       {project_loading ? (
@@ -91,51 +104,107 @@ const ProjectsLists = () => {
           <div className=" w-1233 h-88 border-b border-gray-400 border-solid border-t-0 border-r-0 border-l-0">
             <div className="flex flex-row items-center justify-between">
               <Title className="p-4 m-4" level={4}>
-                Projects List
+                {role === "ROLE_ADMIN"
+                  ? "Project Lists"
+                  : "Projects You Have Included"}
               </Title>
-              <Button
-                style={{
-                  width: 139,
-                  height: 40,
-                  borderRadius: 8,
-                  background: "#2F54EB",
-                }}
-                onClick={showModal}
-                className="p-4  m-4 flex items-center justify-center"
-              >
-                <div className=" text-white">Create Projects</div>
-              </Button>
+              {role === "ROLE_ADMIN" && (
+                <Button
+                  style={{
+                    width: 139,
+                    height: 40,
+                    borderRadius: 8,
+                    background: "#2F54EB",
+                  }}
+                  onClick={showModal}
+                  className="p-4  m-4 flex items-center justify-center"
+                >
+                  <div className=" text-white">Create Projects</div>
+                </Button>
+              )}
             </div>
           </div>
 
           <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 mt-3 pt-3 ml-5 pl-5">
-            {project_list.map((item, index) => (
-              <ProjectCard
-                projectStatus={"todo"}
-                id={item.id}
-                key={index}
-                item={item}
-                index={index}
-                fcolor={
-                  "todo" === "todo"
-                    ? toDoS
-                    : item.status === "done"
-                    ? doneF
-                    : item.status === "inprogress"
-                    ? inprogressF
-                    : null
-                }
-                scolor={
-                  "todo" === "todo"
-                    ? toDoF
-                    : item.status === "done"
-                    ? doneS
-                    : item.status === "inprogress"
-                    ? inprogressS
-                    : null
-                }
-              />
-            ))}
+            {role === "ROLE_ADMIN"
+              ? project_list.map((item, index) => (
+                  <ProjectCard
+                    projectStatus={
+                      item.projectStatus === "TODO"
+                        ? "todo"
+                        : item.projectStatus === "COMPLETE"
+                        ? "done"
+                        : item.projectStatus === "IN_PROGRESS"
+                        ? "inprogress"
+                        : "incomplete"
+                    }
+                    id={item.id}
+                    key={index}
+                    item={item}
+                    index={index}
+                    fcolor={
+                      item.projectStatus === "TODO"
+                        ? toDoS
+                        : item.projectStatus === "COMPLETE"
+                        ? doneF
+                        : item.projectStatus === "IN_PROGRESS"
+                        ? inprogressF
+                        : item.projectStatus === "INCOMPLETE"
+                        ? incompleteF
+                        : null
+                    }
+                    scolor={
+                      item.projectStatus === "TODO"
+                        ? toDoF
+                        : item.projectStatus === "COMPLETE"
+                        ? doneS
+                        : item.projectStatus === "IN_PROGRESS"
+                        ? inprogressS
+                        : item.projectStatus === "INCOMPLETE"
+                        ? incompleteS
+                        : null
+                    }
+                  />
+                ))
+              : member_projects.map((item, index) => (
+                  <ProjectCard
+                    projectStatus={
+                      item.projectStatus === "TODO"
+                        ? "todo"
+                        : item.projectStatus === "COMPLETE"
+                        ? "done"
+                        : item.projectStatus === "IN_PROGRESS"
+                        ? "inprogress"
+                        : "incomplete"
+                    }
+                    id={item.id}
+                    key={index}
+                    item={item}
+                    index={index}
+                    fcolor={
+                      item.projectStatus === "TODO"
+                        ? toDoS
+                        : item.projectStatus === "COMPLETE"
+                        ? doneF
+                        : item.projectStatus === "IN_PROGRESS"
+                        ? inprogressF
+                        : item.projectStatus === "INCOMPLETE"
+                        ? incompleteF
+                        : null
+                    }
+                    scolor={
+                      item.projectStatus === "TODO"
+                        ? toDoF
+                        : item.projectStatus === "COMPLETE"
+                        ? doneS
+                        : item.projectStatus === "IN_PROGRESS"
+                        ? inprogressS
+                        : item.projectStatus === "INCOMPLETE"
+                        ? incompleteS
+                        : null
+                    }
+                  />
+                ))}
           </div>
         </>
       )}

@@ -25,6 +25,7 @@ const initialState = {
   project_to_do_tasks: null,
   project_done_tasks: null,
   project_failed_tasks: null,
+
   taskEdit: false,
 
   deleteMessage: null,
@@ -253,6 +254,8 @@ export const projectSlice = createSlice({
       console.log(state.error);
       state.success = false;
     });
+
+    //GET CURRENT USER PROJECTS
   },
 });
 

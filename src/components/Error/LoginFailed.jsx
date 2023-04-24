@@ -13,7 +13,7 @@ const LoginFailed = () => {
       <Result
         className="loginfailed-items"
         icon={<FrownTwoTone />}
-        title="You need to login First"
+        title="You haven't logged in yet."
         extra={
           <Button
             style={{

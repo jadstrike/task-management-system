@@ -203,20 +203,33 @@ const ProjectMembers = () => {
         okText="Add"
       >
         <div className=" m-3 p-3">
-          <Form
-            onFinish={handleSubmit}
-            form={form}
-            initialValues={old_members !== null && { userId: old_members }}
-          >
-            <Form.Item
-              required={true}
-              colon={false}
-              label="Members"
-              name="userId"
+          {Object.keys(old_members).length > 0 ? (
+            <Form
+              onFinish={handleSubmit}
+              form={form}
+              initialValues={{ userId: old_members }}
             >
-              <Select options={options} mode="multiple"></Select>
-            </Form.Item>
-          </Form>
+              <Form.Item
+                required={true}
+                colon={false}
+                label="Members"
+                name="userId"
+              >
+                <Select options={options} mode="multiple"></Select>
+              </Form.Item>
+            </Form>
+          ) : (
+            <Form onFinish={handleSubmit} form={form}>
+              <Form.Item
+                required={true}
+                colon={false}
+                label="Members"
+                name="userId"
+              >
+                <Select options={options} mode="multiple"></Select>
+              </Form.Item>
+            </Form>
+          )}
         </div>
       </Modal>
     </div>

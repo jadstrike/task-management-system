@@ -20,9 +20,11 @@ import {
   getMemberCount,
   getProjectsCount,
 } from "../../features/content/contentActions";
+import { useNavigate } from "react-router-dom";
 const { Title } = Typography;
 
 const DashboardHome = () => {
+  const navigate = useNavigate();
   const role = useSelector((state) => state.auth.role);
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.member.loading);
@@ -38,7 +40,9 @@ const DashboardHome = () => {
       dispatch(getMemberCount());
       dispatch(getProjectsCount());
     } else {
-      console.log("member");
+      dispatch(getCurrentUserProjects());
+
+      navigate("/dashboard/myprojects");
     }
   }, [role]);
 

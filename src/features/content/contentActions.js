@@ -1,4 +1,6 @@
 import axiosInstance from "../../api/api";
+import axios from "axios";
+axios.defaults.headers.common["ngrok-skip-browser-warning"] = "any value";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 const baseURL = import.meta.env.VITE_API_URL;
 

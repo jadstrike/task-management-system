@@ -10,8 +10,9 @@ import {
   Dropdown,
   Tag,
   Drawer,
+  Empty,
 } from "antd";
-import { DownOutlined } from "@ant-design/icons";
+import { DownOutlined, InboxOutlined } from "@ant-design/icons";
 const { Title } = Typography;
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -37,11 +38,15 @@ const ProjectTasks = () => {
     }
   }, [isTaskEdit]);
 
-  // console.log(project_detail.users);
-  const options = project_detail.users.map((member) => ({
-    label: member.username,
-    value: member.id,
-  }));
+  console.log(project_detail.users);
+  let options = null;
+
+  if (project_detail.users !== null) {
+    options = project_detail.users.map((member) => ({
+      label: member.username,
+      value: member.id,
+    }));
+  }
   //Filter Items
   const items = [
     {
@@ -183,6 +188,11 @@ const ProjectTasks = () => {
                 // showSearch
                 options={options}
                 placeholder="Assign Members :"
+                notFoundContent={
+                  options ? null : (
+                    <Empty description="No Members Yet. You need to add members first ✨" />
+                  )
+                }
               ></Select>
             </Form.Item>
             <Form.Item name="priorityStatus">

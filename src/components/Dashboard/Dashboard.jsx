@@ -75,7 +75,7 @@ const Dashboard = () => {
 
         <Layout>
           {loading ? (
-            <GooSpinner size={30} color="#000000" />
+            <MySpin />
           ) : (
             <>
               <DashboardSider />

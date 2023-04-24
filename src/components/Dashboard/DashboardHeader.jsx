@@ -26,6 +26,7 @@ import logotitle from "/logotitle.svg";
 import { getProjectList } from "../../features/projects/projectActions";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { persistor } from "../../app/store";
 import {
   getCurrentUserProjects,
   getMemberList,
@@ -46,6 +47,7 @@ const DashboardHeader = () => {
   const [isDisabled, setDisabled] = useState(true);
   const [Loading, setLoading] = useState(false);
   const role = useSelector((state) => state.auth.role);
+  const role_id = useSelector((state) => state.auth.role_id);
   const memberCount = useSelector((state) => state.content.memberCount);
   const projectsCount = useSelector((state) => state.content.projectsCount);
   const [form] = Form.useForm();
@@ -79,34 +81,72 @@ const DashboardHeader = () => {
       imgUrl: formdata.imgurl,
       positionId: 1,
     };
-    console.log(data);
-    setLoading(true);
-    axios
-      .put(`${backendURL}/api/updateAdmin/1`, data, {
-        headers: {
-          Authorization: Authorization,
-        },
-      })
-      .then((response) => {
-        setLoading(false);
-        setProfileData(response.data);
-        console.log(ProfileData);
-        message.success("Profile Updated Successfully");
-        setDisabled(true);
-        // handle successful response here
-      })
-      .catch((error) => {
-        console.log(error.response.data.message);
-        message = error.data.message;
-        setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: message,
-        });
 
-        // handle error here
-      });
+    const member_update_data = {
+      username: formdata.username,
+      email: formdata.email,
+      imgUrl: formdata.imgurl,
+      positionId: ProfileData.positionId,
+    };
+
+    console.log(data);
+    console.log(member_update_data);
+    setLoading(true);
+    role === "ROLE_ADMIN"
+      ? axios
+          .put(`${backendURL}/api/updateAdmin/1`, data, {
+            headers: {
+              Authorization: Authorization,
+            },
+          })
+          .then((response) => {
+            setLoading(false);
+            setProfileData(response.data);
+            console.log(ProfileData);
+            message.success("Profile Updated Successfully");
+            setDisabled(true);
+            // handle successful response here
+          })
+          .catch((error) => {
+            console.log(error.response.data.message);
+            error_message = error.data.message;
+            setLoading(false);
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: message,
+            });
+
+            // handle error here
+          })
+      : axios
+          .put(
+            `${backendURL}/api/updateMember/${role_id}`,
+            member_update_data,
+            {
+              headers: {
+                Authorization: Authorization,
+              },
+            }
+          )
+          .then((response) => {
+            setLoading(false);
+            setProfileData(response.data);
+            console.log(ProfileData);
+            message.success("Profile Updated Successfully");
+            setDisabled(true);
+            // handle successful response here
+          })
+          .catch((error) => {
+            // console.log(error.response.data.message);
+            // error_message = error.data.message;
+            setLoading(false);
+            Swal.fire({
+              icon: "error",
+              title: error,
+              // text: error,
+            });
+          });
 
     // setLoading(true);
   };
@@ -114,8 +154,11 @@ const DashboardHeader = () => {
   const handleLogout = () => {
     console.log("logout");
     localStorage.removeItem("token");
+    localStorage.removeItem("root");
+    persistor.purge();
+
     dispatch(logout());
-    navigate("/dashboard");
+    navigate("/");
   };
 
   useEffect(() => {
@@ -143,8 +186,9 @@ const DashboardHeader = () => {
 
             // handle error here
           })
-      : axios
-          .get(`${backendURL}/api/member/2`, {
+      : role === "ROLE_USER"
+      ? axios
+          .get(`${backendURL}/api/member/${role_id}`, {
             headers: {
               Authorization: Authorization,
             },
@@ -164,7 +208,8 @@ const DashboardHeader = () => {
               text: { error },
             });
             // handle error here
-          });
+          })
+      : null;
   }, [role]);
 
   return (
@@ -289,7 +334,7 @@ const DashboardHeader = () => {
                     <Input></Input>
                   </Form.Item>
 
-                  <div className=" flex justify-center items-center">
+                  <div className=" flex flex-row space-x-3 justify-center items-center">
                     <Button
                       type="primary"
                       htmlType="submit"
@@ -297,6 +342,18 @@ const DashboardHeader = () => {
                       style={{ width: "100px", height: "40px" }}
                     >
                       Save
+                    </Button>
+                    <Button
+                      type="primary"
+                      onClick={() => setDisabled(true)}
+                      loading={Loading}
+                      style={{
+                        width: "100px",
+                        height: "40px",
+                        backgroundColor: "gray",
+                      }}
+                    >
+                      Back
                     </Button>
                   </div>
                 </Form>
@@ -310,11 +367,13 @@ const DashboardHeader = () => {
           <div className=" flex flex-row space-x-2 justify-center items-center">
             <div className=" w-[160px] h-[95px] bg-white flex flex-col justify-center space-y-2 items-start">
               <span className=" ml-3 text-gray-400">Total Projects</span>
-              <span className=" text-lg ml-3">{projectsCount}</span>
+              <span className=" text-lg ml-3"></span>
             </div>
             <div className=" w-[160px] h-[95px] bg-white flex flex-col justify-center space-y-2 items-start ">
-              <span className=" ml-3 text-gray-400">Total Members</span>
-              <span className=" ml-3 text-lg">{memberCount}</span>
+              <span className=" ml-3 text-gray-400">
+                {role === "ROLE_ADMIN" ? "Total Members" : "Total Tasks"}
+              </span>
+              <span className=" ml-3 text-lg"></span>
             </div>
           </div>
           <div
