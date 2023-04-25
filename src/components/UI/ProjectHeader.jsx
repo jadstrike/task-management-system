@@ -211,7 +211,7 @@ const ProjectHeader = () => {
               </Badge>
               <Avatar
                 size={40}
-                src="https://thumbs.dreamstime.com/b/iron-man-17900674.jpg"
+                src={ProfileData.imgUrl}
                 onClick={() => setIsDrawerOpen(true)}
                 className=" cursor-pointer"
                 icon={<UserOutlined />}

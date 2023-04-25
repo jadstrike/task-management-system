@@ -36,6 +36,7 @@ export const authSlice = createSlice({
     },
     logout: (state) => {
       Object.assign(state, initialState);
+      localStorage.removeItem("persist:root");
     },
   },
   extraReducers: (builder) => {

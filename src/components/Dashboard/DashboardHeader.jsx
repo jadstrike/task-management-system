@@ -30,6 +30,10 @@ import { persistor } from "../../app/store";
 import {
   getCurrentUserProjects,
   getMemberList,
+  getUserDoneTasks,
+  getUserFailedTasks,
+  getUserInProgressTasks,
+  getUserToDoTasks,
 } from "../../features/member/memberActions";
 import { logout } from "../../features/auth/authSlice";
 const { Title } = Typography;
@@ -42,6 +46,7 @@ const DashboardHeader = () => {
   const backendURL = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem("token");
   const Authorization = `Bearer ${token}`;
+  const [passwordMode, setPasswordMode] = useState(false);
   const [logOutLoading, setLogOutLoading] = useState(false);
   const [ProfileData, setProfileData] = useState(null);
   const [isDisabled, setDisabled] = useState(true);
@@ -52,7 +57,7 @@ const DashboardHeader = () => {
   const projectsCount = useSelector((state) => state.content.projectsCount);
   const [form] = Form.useForm();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  console.log("IsDiabled: ", isDisabled);
+  // console.log("IsDiabled: ", isDisabled);
   const closeDrawer = () => {
     setIsDrawerOpen(false);
     setDisabled(true);
@@ -89,8 +94,8 @@ const DashboardHeader = () => {
       positionId: ProfileData.positionId,
     };
 
-    console.log(data);
-    console.log(member_update_data);
+    // console.log(data);
+    // console.log(member_update_data);
     setLoading(true);
     role === "ROLE_ADMIN"
       ? axios
@@ -102,7 +107,7 @@ const DashboardHeader = () => {
           .then((response) => {
             setLoading(false);
             setProfileData(response.data);
-            console.log(ProfileData);
+            // console.log(ProfileData);
             message.success("Profile Updated Successfully");
             setDisabled(true);
             // handle successful response here
@@ -132,7 +137,7 @@ const DashboardHeader = () => {
           .then((response) => {
             setLoading(false);
             setProfileData(response.data);
-            console.log(ProfileData);
+            // console.log(ProfileData);
             message.success("Profile Updated Successfully");
             setDisabled(true);
             // handle successful response here
@@ -150,6 +155,16 @@ const DashboardHeader = () => {
 
     // setLoading(true);
   };
+  useEffect(() => {
+    if (role === "ROLE_USER") {
+      dispatch(getUserToDoTasks());
+      dispatch(getUserInProgressTasks());
+      dispatch(getUserDoneTasks());
+      dispatch(getUserFailedTasks());
+    } else {
+      null;
+    }
+  }, [role]);
 
   const handleLogout = () => {
     console.log("logout");
@@ -171,7 +186,7 @@ const DashboardHeader = () => {
           })
           .then((response) => {
             setProfileData(response.data);
-            console.log(ProfileData);
+            // console.log(ProfileData);
             // setLoading(false);
             // handle successful response here
           })
@@ -346,7 +361,6 @@ const DashboardHeader = () => {
                     <Button
                       type="primary"
                       onClick={() => setDisabled(true)}
-                      loading={Loading}
                       style={{
                         width: "100px",
                         height: "40px",
@@ -367,13 +381,25 @@ const DashboardHeader = () => {
           <div className=" flex flex-row space-x-2 justify-center items-center">
             <div className=" w-[160px] h-[95px] bg-white flex flex-col justify-center space-y-2 items-start">
               <span className=" ml-3 text-gray-400">Total Projects</span>
-              <span className=" text-lg ml-3"></span>
+              <span className=" text-lg ml-3">
+                {role === "ROLE_ADMIN"
+                  ? projectsCount
+                  : role === "ROLE_USER"
+                  ? ProfileData.projects.length
+                  : null}
+              </span>
             </div>
             <div className=" w-[160px] h-[95px] bg-white flex flex-col justify-center space-y-2 items-start ">
               <span className=" ml-3 text-gray-400">
                 {role === "ROLE_ADMIN" ? "Total Members" : "Total Tasks"}
               </span>
-              <span className=" ml-3 text-lg"></span>
+              <span className=" ml-3 text-lg">
+                {role === "ROLE_ADMIN"
+                  ? memberCount
+                  : role === "ROLE_USER"
+                  ? ProfileData.tasks.length
+                  : null}
+              </span>
             </div>
           </div>
           <div

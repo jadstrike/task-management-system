@@ -199,7 +199,7 @@ const ProjectMembers = () => {
         centered={true}
         onCancel={handleCancel}
         onOk={form.submit}
-        width={331}
+        width={400}
         okText="Add"
       >
         <div className=" m-3 p-3">
@@ -219,12 +219,13 @@ const ProjectMembers = () => {
               </Form.Item>
             </Form>
           ) : (
-            <Form onFinish={handleSubmit} form={form}>
+            <Form onFinish={handleSubmit} requiredMark={false} form={form}>
               <Form.Item
                 required={true}
                 colon={false}
                 label="Members"
                 name="userId"
+                requiredMark={false}
               >
                 <Select options={options} mode="multiple"></Select>
               </Form.Item>

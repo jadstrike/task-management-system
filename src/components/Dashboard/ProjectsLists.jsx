@@ -49,7 +49,7 @@ const ProjectsLists = () => {
 
   // console.log(project_list);
   const project_list = useSelector((state) => state.project.projects_list);
-  console.log(project_list);
+  // console.log(project_list);
 
   // const options = member_list.map((member) => ({
   //   label: member.username,

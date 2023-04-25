@@ -6,6 +6,10 @@ import {
   getCurrentUserProjects,
   getMemberList,
   getPositinLists,
+  getUserDoneTasks,
+  getUserFailedTasks,
+  getUserInProgressTasks,
+  getUserToDoTasks,
 } from "./memberActions";
 
 const initialState = {
@@ -19,6 +23,10 @@ const initialState = {
   delete_error: null,
   member_creating: null,
   member_created: null,
+  User_ToDo_Tasks: null,
+  User_InProgress_Tasks: null,
+  User_Done_Tasks: null,
+  User_Failed_Tasks: null,
 };
 
 export const memberSlice = createSlice({
@@ -153,6 +161,83 @@ export const memberSlice = createSlice({
       state.member_projects = payload;
     });
     builder.addCase(getCurrentUserProjects.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+      state.success = false;
+      console.log(state.error);
+    });
+
+    //GET USER TO DO TASKS
+    builder.addCase(getUserToDoTasks.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(getUserToDoTasks.fulfilled, (state, { payload }) => {
+      console.log("User To Do" + payload);
+      state.loading = false;
+      state.success = true;
+      state.User_ToDo_Tasks = payload;
+    });
+    builder.addCase(getUserToDoTasks.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+      state.success = false;
+      console.log(state.error);
+    });
+
+    //GET USER IN PROGRESS TASKS
+    builder.addCase(getUserInProgressTasks.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(getUserInProgressTasks.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.success = true;
+      state.User_InProgress_Tasks = payload;
+    });
+    builder.addCase(getUserInProgressTasks.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+      state.success = false;
+      console.log(state.error);
+    });
+
+    //GET USER DONE TASKS
+    builder.addCase(getUserDoneTasks.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(getUserDoneTasks.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.success = true;
+      state.User_Done_Tasks = payload;
+    });
+    builder.addCase(getUserDoneTasks.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+      state.success = false;
+      console.log(state.error);
+    });
+
+    //GET USER DONE TASKS
+    builder.addCase(getUserFailedTasks.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(getUserFailedTasks.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.success = true;
+      state.User_Failed_Tasks = payload;
+    });
+    builder.addCase(getUserFailedTasks.rejected, (state, { payload }) => {
       state.loading = false;
       state.error = payload;
       state.success = false;

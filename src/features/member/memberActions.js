@@ -202,3 +202,147 @@ export const getCurrentUserProjects = createAsyncThunk(
     }
   }
 );
+
+export const getUserToDoTasks = createAsyncThunk(
+  "member/getUserToDoTasks",
+  async () => {
+    // console.log(token);
+    // console.log(title);
+    // console.log(imageUrl);
+    // console.log(description);
+
+    // console.log(id);
+    // console.log(Authorization);
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+
+          Authorization,
+        },
+      };
+      const { data } = await axios.get(
+        `${backendURL}/api/currentUserToDoTasks`,
+        // { title, imageUrl, description },
+        config
+      );
+      // store user's token in loacl storage
+      console.log(data);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.messsage) {
+        return error.response.data.messsage;
+      } else {
+        return error.messsage;
+      }
+    }
+  }
+);
+
+export const getUserInProgressTasks = createAsyncThunk(
+  "member/getUserInProgressTasks",
+  async () => {
+    // console.log(token);
+    // console.log(title);
+    // console.log(imageUrl);
+    // console.log(description);
+
+    // console.log(id);
+    // console.log(Authorization);
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+
+          Authorization,
+        },
+      };
+      const { data } = await axios.get(
+        `${backendURL}/api/currentUserInProgressTasks`,
+        // { title, imageUrl, description },
+        config
+      );
+      // store user's token in loacl storage
+      console.log(data);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.messsage) {
+        return error.response.data.messsage;
+      } else {
+        return error.messsage;
+      }
+    }
+  }
+);
+
+export const getUserDoneTasks = createAsyncThunk(
+  "member/getUserDoneTasks",
+  async () => {
+    // console.log(token);
+    // console.log(title);
+    // console.log(imageUrl);
+    // console.log(description);
+
+    // console.log(id);
+    // console.log(Authorization);
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+
+          Authorization,
+        },
+      };
+      const { data } = await axios.get(
+        `${backendURL}/api/currentUserDoneTasks`,
+        // { title, imageUrl, description },
+        config
+      );
+      // store user's token in loacl storage
+      console.log(data);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.messsage) {
+        return error.response.data.messsage;
+      } else {
+        return error.messsage;
+      }
+    }
+  }
+);
+
+export const getUserFailedTasks = createAsyncThunk(
+  "member/getCurrentUserFailedTasks",
+  async () => {
+    // console.log(token);
+    // console.log(title);
+    // console.log(imageUrl);
+    // console.log(description);
+
+    // console.log(id);
+    // console.log(Authorization);
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+
+          Authorization,
+        },
+      };
+      const { data } = await axios.get(
+        `${backendURL}/api/currentUserFailedTasks`,
+        // { title, imageUrl, description },
+        config
+      );
+      // store user's token in loacl storage
+      console.log(data);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.messsage) {
+        return error.response.data.messsage;
+      } else {
+        return error.messsage;
+      }
+    }
+  }
+);

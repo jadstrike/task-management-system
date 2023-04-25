@@ -19,6 +19,7 @@ import ProjectDashboard from "./components/Project/ProjectDashboard";
 import ErrorPage from "./components/Error/ErrorPage";
 import Profile from "./components/Dashboard/Profile";
 import ProjectTasks from "./components/Project/ProjectTasks";
+import MemberTasks from "./components/Dashboard/MemberTasks";
 import ProjectMembers from "./components/Project/ProjectMembers";
 import Dnd from "./components/dnd-test";
 
@@ -52,6 +53,22 @@ const router = createBrowserRouter([
       {
         path: "myprojects",
         element: <ProjectsLists />,
+      },
+      {
+        path: "MyTasks/ToDo",
+        element: <MemberTasks />,
+      },
+      {
+        path: "MyTasks/InProgress",
+        element: <MemberTasks />,
+      },
+      {
+        path: "MyTasks/Completed",
+        element: <MemberTasks />,
+      },
+      {
+        path: "MyTasks/Failed",
+        element: <MemberTasks />,
       },
     ],
     errorElement: <ErrorPage />,
