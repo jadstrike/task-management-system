@@ -1,13 +1,22 @@
 import { Typography, Badge } from "antd";
 import { useSelector } from "react-redux";
 import TaskCard from "../UI/TaskCard";
+import { useDispatch } from "react-redux";
+import {
+  getUserDoneTasks,
+  getUserFailedTasks,
+  getUserInProgressTasks,
+  getUserToDoTasks,
+} from "../../features/member/memberActions";
 const { Title } = Typography;
 
 const MemberTasks = () => {
+  const dispatch = useDispatch();
   const InProgress_Tasks = useSelector(
     (state) => state.member.User_InProgress_Tasks
   );
   const ToDo_Tasks = useSelector((state) => state.member.User_ToDo_Tasks);
+  const loading = useSelector((state) => state.member.loading);
   const Completed_Tasks = useSelector((state) => state.member.User_Done_Tasks);
   const Failed_Tasks = useSelector((state) => state.member.User_Failed_Tasks);
   console.log(InProgress_Tasks.length);
@@ -17,6 +26,12 @@ const MemberTasks = () => {
   const inprogressColor = "#1890FF";
   const completedColor = "#52C41A";
   const failedColor = "red";
+  const refreshTasks = () => {
+    dispatch(getUserDoneTasks());
+    dispatch(getUserInProgressTasks());
+    dispatch(getUserToDoTasks());
+    dispatch(getUserFailedTasks());
+  };
 
   return (
     <>
@@ -70,7 +85,9 @@ const MemberTasks = () => {
         {filter === "ToDo"
           ? ToDo_Tasks.map((item, index) => (
               <TaskCard
+                counter={item.counter}
                 title={item.title}
+                id={item.id}
                 key={item.id}
                 description={item.description}
                 dueDate={item.dueDate}
@@ -83,7 +100,9 @@ const MemberTasks = () => {
           : filter === "InProgress"
           ? InProgress_Tasks.map((item, index) => (
               <TaskCard
+                counter={item.counter}
                 title={item.title}
+                id={item.id}
                 key={item.id}
                 description={item.description}
                 dueDate={item.dueDate}
@@ -96,7 +115,9 @@ const MemberTasks = () => {
           : filter === "Completed"
           ? Completed_Tasks.map((item, index) => (
               <TaskCard
+                counter={item.counter}
                 title={item.title}
+                id={item.id}
                 key={item.id}
                 description={item.description}
                 dueDate={item.dueDate}
@@ -104,13 +125,16 @@ const MemberTasks = () => {
                 priorityStatus={item.priorityStatus}
                 borderColor={"#73D13D"}
                 projectTitle={item.projectName}
+                duration={item.duration}
                 no={true}
               />
             ))
           : filter === "Failed"
           ? Failed_Tasks.map((item, index) => (
               <TaskCard
+                counter={item.counter}
                 title={item.title}
+                id={item.id}
                 key={item.id}
                 description={item.description}
                 dueDate={item.dueDate}
@@ -118,6 +142,7 @@ const MemberTasks = () => {
                 priorityStatus={item.priorityStatus}
                 borderColor={"red"}
                 projectTitle={item.projectName}
+                duration={item.duration}
                 no={true}
               />
             ))

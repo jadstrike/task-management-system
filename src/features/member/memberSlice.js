@@ -10,6 +10,7 @@ import {
   getUserFailedTasks,
   getUserInProgressTasks,
   getUserToDoTasks,
+  startTask,
 } from "./memberActions";
 
 const initialState = {
@@ -238,6 +239,23 @@ export const memberSlice = createSlice({
       state.User_Failed_Tasks = payload;
     });
     builder.addCase(getUserFailedTasks.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+      state.success = false;
+      console.log(state.error);
+    });
+
+    builder.addCase(startTask.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(startTask.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.success = true;
+    });
+    builder.addCase(startTask.rejected, (state, { payload }) => {
       state.loading = false;
       state.error = payload;
       state.success = false;

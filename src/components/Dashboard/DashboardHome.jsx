@@ -81,10 +81,10 @@ const DashboardHome = () => {
           </Card>
         </div>
       </div>
-      <div className=" h-full bg-gray-100">
+      <div className=" h-80  bg-gray-100">
         <ProjectPie />
       </div>
-      <Title className="m-4 p-4" level={5}>
+      <Title className="ml-4 pt-2" level={5}>
         Completed Projects
       </Title>
       {/* <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 ml-5 pl-5">

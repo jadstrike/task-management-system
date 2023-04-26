@@ -15,8 +15,8 @@ const ProjectDashboard = () => {
 
   return (
     <Layout>
-      {/* <ProjectHeader /> */}
-      <Header
+      <ProjectHeader />
+      {/* <Header
         style={{
           padding: 0,
           margin: 0,
@@ -47,12 +47,12 @@ const ProjectDashboard = () => {
             />
           </div>
         </div>
-      </Header>
+      </Header> */}
       <Layout
         style={{
           minHeight: "100vh",
         }}
-        className="mt-14"
+        // className="mt-14"
       >
         {project_detail !== null ? (
           <>

@@ -75,7 +75,9 @@ const DashboardSider = () => {
       className="font-robo"
       style={{
         backgroundColor: "#fff",
+        minHeight: "100vh",
         boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.15)",
+        // overflow: "hidden",
       }}
     >
       <Menu

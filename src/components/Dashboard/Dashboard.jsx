@@ -68,7 +68,8 @@ const Dashboard = () => {
     <>
       <Layout
         style={{
-          minHeight: "100vh",
+          height: "100vh",
+          overflow: "hidden",
         }}
       >
         <DashboardHeader />

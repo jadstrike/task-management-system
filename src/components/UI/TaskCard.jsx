@@ -7,11 +7,28 @@ import {
   UserOutlined,
   PlayCircleFilled,
   ProjectOutlined,
+  PauseCircleFilled,
 } from "@ant-design/icons";
 import { Draggable } from "react-beautiful-dnd";
+import { useState } from "react";
 import { setTaskEdit } from "../../features/projects/projectSlice";
+import { startTask } from "../../features/member/memberActions";
+import {
+  getUserDoneTasks,
+  getUserFailedTasks,
+  getUserInProgressTasks,
+  getUserToDoTasks,
+} from "../../features/member/memberActions";
 const TaskCard = (props) => {
-  console.log(props.no);
+  const [isStart, setIsStart] = useState(false);
+  const refreshTasks = () => {
+    dispatch(getUserDoneTasks());
+    dispatch(getUserInProgressTasks());
+    dispatch(getUserToDoTasks());
+    dispatch(getUserFailedTasks());
+  };
+
+  // console.log(props.no);
   const role = useSelector((state) => state.auth.role);
   const dispatch = useDispatch();
   const taskedit = () => {
@@ -78,18 +95,46 @@ const TaskCard = (props) => {
                 : props.username !== undefined && props.username}
               {role === "ROLE_USER" && props.no !== true && (
                 <div className=" mt-1 mb-2 ">
-                  <PlayCircleFilled
-                    className=" w-ful hover:backdrop-blur-sm"
-                    onClick={() => alert("You clicked play button")}
-                    style={{
-                      fontSize: "25px",
-                      color: "#52C41A",
-                    }}
-                  />
+                  {props.counter === 2 ? (
+                    <PlayCircleFilled
+                      className=" w-ful hover:backdrop-blur-sm"
+                      onClick={() => {
+                        dispatch(startTask(props.id));
+                        setIsStart(true);
+                        // refreshTasks();
+                      }}
+                      style={{
+                        fontSize: "25px",
+                        color: "#52C41A",
+                      }}
+                    />
+                  ) : props.counter === 1 ? (
+                    <PlayCircleFilled
+                      className=" w-ful hover:backdrop-blur-sm"
+                      onClick={() => {
+                        dispatch(startTask(props.id));
+                        setIsStart(true);
+                        // refreshTasks();
+                      }}
+                      style={{
+                        fontSize: "25px",
+                        color: "#52C41A",
+                      }}
+                    />
+                  ) : props.counter === 0 ? (
+                    <PauseCircleFilled
+                      style={{ fontSize: "25px", color: "red" }}
+                    />
+                  ) : null}
                 </div>
               )}
               {role === "ROLE_USER" && props.no !== true && (
                 <Button type="primary">Done</Button>
+              )}
+              {props.no === true && (
+                <span className="flex text-center flex-row  text-green-700">
+                  Spent Time : {props.duration} hours
+                </span>
               )}
             </div>
           </div>

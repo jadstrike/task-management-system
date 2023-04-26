@@ -20,6 +20,7 @@ import Swal from "sweetalert2";
 const { Header } = Layout;
 
 const ProjectHeader = () => {
+  const [messageApi, contextHolder] = antdMessage.useMessage();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const memberCount = useSelector((state) => state.content.memberCount);
@@ -27,6 +28,7 @@ const ProjectHeader = () => {
   const role = useSelector((state) => state.auth.role);
   const role_id = useSelector((state) => state.auth.role_id);
   const [ProfileData, setProfileData] = useState(null);
+  const [passwordEdit, setPasswordEdit] = useState(false);
   const [isDisabled, setDisabled] = useState(true);
   const [Loading, setLoading] = useState(false);
   const [form] = Form.useForm();
@@ -35,11 +37,45 @@ const ProjectHeader = () => {
   const closeDrawer = () => {
     setIsDrawerOpen(false);
     setDisabled(true);
+    setPasswordEdit(false);
+  };
+
+  const showerror = (err) => {
+    messageApi.open({
+      type: "error",
+      content: err,
+    });
   };
 
   const backendURL = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem("token");
   const Authorization = `Bearer ${token}`;
+  //HandleChangePassword
+  const handleChangePassword = (formdata) => {
+    console.log(formdata);
+    axios
+      .put(`${backendURL}/api/changePassword`, formdata, {
+        headers: {
+          Authorization: Authorization,
+        },
+      })
+      .then((response) => {
+        setLoading(false);
+
+        console.log(response);
+        antdMessage.success("Profile Updated Successfully");
+        setDisabled(true);
+        setPasswordEdit(false);
+        // handle successful response here
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+        // alert(error.response.data);
+        showerror(error.response.data);
+        // antdMessage.error(error.response.data);
+      });
+  };
 
   //HANDLING PROFILE DATA
   const handleUpdate = (formdata) => {
@@ -102,7 +138,7 @@ const ProjectHeader = () => {
             setLoading(false);
             setProfileData(response.data);
             console.log(ProfileData);
-            antdMessage.success("Profile Updated Successfully");
+            antdMessage.success("Password Updated Successfully");
             setDisabled(true);
             // handle successful response here
           })
@@ -181,6 +217,7 @@ const ProjectHeader = () => {
   return (
     ProfileData !== null && (
       <>
+        {contextHolder}
         <Header
           style={{
             padding: 0,
@@ -238,7 +275,108 @@ const ProjectHeader = () => {
             ></Avatar>
             <div className=" w-[300px] mt-4 h-[280px] bg-[#FFFFFF] flex flex-col justify-start pt-4  items-center">
               <Title level={5}>About Me</Title>
-              {isDisabled ? (
+              {isDisabled && passwordEdit ? (
+                <Form
+                  labelAlign="center"
+                  layout="vertical"
+                  // form={form}
+                  onFinish={handleChangePassword}
+                >
+                  <Form.Item
+                    requiredMark={false}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input Old Password",
+                      },
+                    ]}
+                    label="Old Password"
+                    name="oldPassword"
+                  >
+                    <Input.Password></Input.Password>
+                  </Form.Item>
+                  <Form.Item
+                    requiredMark={false}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input New Password",
+                      },
+                    ]}
+                    label="New Passsword"
+                    name="newPassword"
+                  >
+                    <Input.Password></Input.Password>
+                  </Form.Item>
+                  <div className=" flex flex-row space-x-3 justify-center items-center">
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      loading={Loading}
+                      style={{ width: "100px", height: "40px" }}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        setDisabled(true);
+                        setPasswordEdit(false);
+                        // form.resetFields();
+                      }}
+                      style={{
+                        width: "100px",
+                        height: "40px",
+                        backgroundColor: "gray",
+                      }}
+                    >
+                      Back
+                    </Button>
+                  </div>
+                </Form>
+              ) : !isDisabled ? (
+                <Form
+                  form={form}
+                  initialValues={{
+                    username: ProfileData.username,
+                    email: ProfileData.email,
+                    imgurl: ProfileData.imgUrl,
+                  }}
+                  onFinish={handleUpdate}
+                >
+                  <Form.Item label="Name" name="username">
+                    <Input></Input>
+                  </Form.Item>
+                  <Form.Item label="Email" name="email">
+                    <Input type="email"></Input>
+                  </Form.Item>
+                  <Form.Item label="Image" name="imgurl">
+                    <Input></Input>
+                  </Form.Item>
+
+                  <div className=" flex flex-row space-x-3 justify-center items-center">
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      loading={Loading}
+                      style={{ width: "100px", height: "40px" }}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      type="primary"
+                      onClick={() => setDisabled(true)}
+                      style={{
+                        width: "100px",
+                        height: "40px",
+                        backgroundColor: "gray",
+                      }}
+                    >
+                      Back
+                    </Button>
+                  </div>
+                </Form>
+              ) : isDisabled ? (
                 <div className="">
                   {Loading ? (
                     <Spin />
@@ -280,44 +418,16 @@ const ProjectHeader = () => {
                     <a onClick={() => setDisabled(false)}>Edit Profile</a>
                     <span>|</span>
                     <a
-                    // onClick={() => setDisabled(false)}
+                      onClick={() => {
+                        setDisabled(true);
+                        setPasswordEdit(true);
+                      }}
                     >
                       Change Password
                     </a>
                   </div>
                 </div>
-              ) : (
-                <Form
-                  form={form}
-                  initialValues={{
-                    username: ProfileData.username,
-                    email: ProfileData.email,
-                    imgurl: ProfileData.imgUrl,
-                  }}
-                  onFinish={handleUpdate}
-                >
-                  <Form.Item label="Name" name="username">
-                    <Input></Input>
-                  </Form.Item>
-                  <Form.Item label="Email" name="email">
-                    <Input type="email"></Input>
-                  </Form.Item>
-                  <Form.Item label="Image" name="imgurl">
-                    <Input></Input>
-                  </Form.Item>
-
-                  <div className=" flex justify-center items-center">
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      loading={Loading}
-                      style={{ width: "100px", height: "40px" }}
-                    >
-                      Save
-                    </Button>
-                  </div>
-                </Form>
-              )}
+              ) : null}
             </div>
           </div>
 

@@ -5,8 +5,9 @@ import { Content } from "antd/es/layout/layout";
 const DashboardContent = () => {
   const contentStyle = {
     // textAlign: "center",
-    minHeight: "100vh",
+    height: "100vh",
     lineHeight: "120px",
+    overflow: "auto",
     // color: "red",
     backgroundColor: "#fff",
   };

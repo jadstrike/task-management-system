@@ -58,6 +58,7 @@ const ProjectPie = () => {
       .then((response) => {
         // console.log(response.data);
         setCompleted(response.data.length);
+        console.log(response.data);
         setLoading(false);
         // handle successful response here
       })
@@ -78,7 +79,7 @@ const ProjectPie = () => {
       value: Completed,
     },
     {
-      type: "Over Deadline",
+      type: "Failed",
       value: Incomplete,
     },
   ];
