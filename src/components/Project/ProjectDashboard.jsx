@@ -12,6 +12,7 @@ const { Header, Content, Footer } = Layout;
 const ProjectDashboard = () => {
   const navigate = useNavigate();
   const project_detail = useSelector((state) => state.project.detail_project);
+  const role = useSelector((state) => state.auth.role);
 
   return (
     <Layout>
@@ -57,6 +58,7 @@ const ProjectDashboard = () => {
         {project_detail !== null ? (
           <>
             <ProjectSider project_detail={project_detail} />
+
             <Outlet />
           </>
         ) : (

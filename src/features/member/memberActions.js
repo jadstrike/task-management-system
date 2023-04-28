@@ -377,7 +377,6 @@ export const startTask = createAsyncThunk("member/startTask", async (id) => {
 
 export const stopTask = createAsyncThunk("member/stopTask", async (id) => {
   const stopTime = new Date().toISOString(); //Pyin ya mye
-  console.log(startTime);
   try {
     const config = {
       headers: {
@@ -385,9 +384,9 @@ export const stopTask = createAsyncThunk("member/stopTask", async (id) => {
         Authorization,
       },
     };
-    const { data } = await axios.post(
-      `${backendURL}/api/${id}/${stopTime}stopTime`, // Pyin ya mye
-      { startTime },
+    const { data } = await axios.put(
+      `${backendURL}/api/${id}/stopTime`, // Pyin ya mye
+      { stopTime },
       // { title, imageUrl, description },
       config
     );
@@ -403,34 +402,33 @@ export const stopTask = createAsyncThunk("member/stopTask", async (id) => {
   }
 });
 
-export const endTask = createAsyncThunk(
-  "member/stopTask",
-  async (id, time_sheet_id) => {
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization,
-        },
-      };
-      const { data } = await axios.post(
-        `${backendURL}/api/${id}/${time_sheet_id}stopTime`, // Pyin ya mye
-        { startTime },
-        // { title, imageUrl, description },
-        config
-      );
-      // store user's token in loacl storage
-      console.log(data);
-      return data;
-    } catch (error) {
-      if (error.response && error.response.data.messsage) {
-        return error.response.data.messsage;
-      } else {
-        return error.messsage;
-      }
+export const endTask = createAsyncThunk("member/endTask", async (id) => {
+  const endTime = new Date().toISOString();
+  try {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization,
+      },
+    };
+    const { data } = await axios.put(
+      `${backendURL}/api/${id}/done`, // Pyin ya mye
+      { endTime },
+
+      // { title, imageUrl, description },
+      config
+    );
+    // store user's token in loacl storage
+    console.log(data);
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data.messsage) {
+      return error.response.data.messsage;
+    } else {
+      return error.messsage;
     }
   }
-);
+});
 
 export const getCurrentUserToDoProject = createAsyncThunk(
   "member/currentUserToDoProject",
@@ -628,7 +626,7 @@ export const getEventList = createAsyncThunk(
         },
       };
       const { data } = await axios.get(
-        `${backendURL}/api/currentUserIncompleteProject`,
+        `${backendURL}/api/event/getNotification`,
         // { title, imageUrl, description },
         config
       );

@@ -3,7 +3,13 @@ import {
   createMember,
   DeleteMember,
   DetailMember,
+  endTask,
+  getcurrentUserCompleteProject,
+  getcurrentUserIncompleteProject,
+  getcurrentUserInProgressProject,
   getCurrentUserProjects,
+  getCurrentUserToDoProject,
+  getEventList,
   getMemberList,
   getPositinLists,
   getUserDoneTasks,
@@ -11,6 +17,8 @@ import {
   getUserInProgressTasks,
   getUserToDoTasks,
   startTask,
+  stopTask,
+  subscribe,
 } from "./memberActions";
 
 const initialState = {
@@ -18,6 +26,7 @@ const initialState = {
   members: null,
   error: null,
   success: false,
+
   positionLists: false,
   detail_member: null,
   member_projects: null,
@@ -28,12 +37,24 @@ const initialState = {
   User_InProgress_Tasks: null,
   User_Done_Tasks: null,
   User_Failed_Tasks: null,
+  User_Todo_Projects: null,
+  User_Inprogress_Projects: null,
+  User_Complete_Projects: null,
+  User_Incomplete_Projects: null,
 };
 
 export const memberSlice = createSlice({
   name: "member",
   initialState,
-  reducers: {},
+  reducers: {
+    taskCardId: (state, action) => {
+      state.currentTaskCardId = action.payload;
+      console.log(state.currentTaskCardId);
+    },
+    resetMember: (state) => {
+      Object.assign(state, initialState);
+    },
+  },
   extraReducers: (builder) => {
     //CREATE MEMBER
     builder.addCase(createMember.pending, (state) => {
@@ -261,7 +282,174 @@ export const memberSlice = createSlice({
       state.success = false;
       console.log(state.error);
     });
+
+    builder.addCase(getCurrentUserToDoProject.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(
+      getCurrentUserToDoProject.fulfilled,
+      (state, { payload }) => {
+        state.loading = false;
+        state.success = true;
+        state.User_Todo_Projects = payload;
+      }
+    );
+    builder.addCase(
+      getCurrentUserToDoProject.rejected,
+      (state, { payload }) => {
+        state.loading = false;
+        state.error = payload;
+        state.success = false;
+        console.log(state.error);
+      }
+    );
+    builder.addCase(getcurrentUserInProgressProject.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(
+      getcurrentUserInProgressProject.fulfilled,
+      (state, { payload }) => {
+        state.loading = false;
+        state.success = true;
+        state.User_Inprogress_Projects = payload;
+      }
+    );
+    builder.addCase(
+      getcurrentUserInProgressProject.rejected,
+      (state, { payload }) => {
+        state.loading = false;
+        state.error = payload;
+        state.success = false;
+        console.log(state.error);
+      }
+    );
+
+    builder.addCase(getcurrentUserIncompleteProject.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(
+      getcurrentUserIncompleteProject.fulfilled,
+      (state, { payload }) => {
+        state.loading = false;
+        state.success = true;
+        state.User_Incomplete_Projects = payload;
+      }
+    );
+    builder.addCase(
+      getcurrentUserIncompleteProject.rejected,
+      (state, { payload }) => {
+        state.loading = false;
+        state.error = payload;
+        state.success = false;
+        console.log(state.error);
+      }
+    );
+
+    builder.addCase(getcurrentUserCompleteProject.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(
+      getcurrentUserCompleteProject.fulfilled,
+      (state, { payload }) => {
+        state.loading = false;
+        state.success = true;
+        state.User_Complete_Projects = payload;
+      }
+    );
+    builder.addCase(
+      getcurrentUserCompleteProject.rejected,
+      (state, { payload }) => {
+        state.loading = false;
+        state.error = payload;
+        state.success = false;
+        console.log(state.error);
+      }
+    );
+    builder.addCase(subscribe.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(subscribe.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.success = true;
+      state.notis = payload;
+    });
+    builder.addCase(subscribe.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+      state.success = false;
+      console.log(state.error);
+    });
+
+    builder.addCase(getEventList.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(getEventList.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.success = true;
+      state.User_Todo_Projects = payload;
+    });
+    builder.addCase(getEventList.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+      state.success = false;
+      console.log(state.error);
+    });
+
+    builder.addCase(stopTask.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(stopTask.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.success = true;
+      console.log(payload);
+    });
+    builder.addCase(stopTask.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+      state.success = false;
+      console.log(state.error);
+    });
+
+    builder.addCase(endTask.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(endTask.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.success = true;
+    });
+    builder.addCase(endTask.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+      state.success = false;
+      console.log(state.error);
+    });
   },
 });
+
+export const { taskCardId, resetMember } = memberSlice.actions;
 
 export default memberSlice.reducer;

@@ -7,13 +7,94 @@ import {
   Card,
   Progress,
 } from "antd";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const { Title } = Typography;
 import { EditTwoTone, ArrowLeftOutlined } from "@ant-design/icons";
-import ProjectHeader from "./UI/ProjectHeader";
+import ProjectHeader from "./ProjectHeader";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import MySpin from "../Dashboard/MySpin";
+import { getToDoTasks } from "../../features/projects/projectActions";
 
 const MemberProfile = () => {
-  return (
+  const backendURL = import.meta.env.VITE_API_URL;
+  const token = localStorage.getItem("token");
+  const Authorization = `Bearer ${token}`;
+  const [dataLoading, setDataLoading] = useState(true);
+  const [todoTasks, setTodoTasks] = useState(null);
+  const [inProgressTasks, setInProgressTasks] = useState(null);
+  const [completeTasks, setCompleteTasks] = useState(null);
+  const member_info = useSelector((state) => state.member.detail_member);
+  // const inProgressTasks = useSelector((state)=>state.member.inProgressTasks)
+  const loading = useSelector((state) => state.member.loading);
+
+  useEffect(() => {
+    axios
+      .get(`${backendURL}/api/currentUserToDoTasks/${member_info.id}`, {
+        headers: {
+          Authorization: Authorization,
+        },
+      })
+      .then((response) => {
+        // console.log(response.data);
+        setTodoTasks(response.data);
+        console.log(response.data);
+        // setLoading(false);
+        // handle successful response here
+      })
+      .catch((error) => {
+        console.log(error);
+        setDataLoading(false);
+        // handle error here
+      });
+
+    axios
+      .get(`${backendURL}/api/currentUserInProgressTasks/${member_info.id}`, {
+        headers: {
+          Authorization: Authorization,
+        },
+      })
+      .then((response) => {
+        // console.log(response.data);
+        setInProgressTasks(response.data);
+        console.log(response.data);
+        // setLoading(false);
+        // handle successful response here
+      })
+      .catch((error) => {
+        console.log(error);
+        setDataLoading(false);
+        // handle error here
+      });
+
+    axios
+      .get(`${backendURL}/api/currentUserDoneTasks/${member_info.id}`, {
+        headers: {
+          Authorization: Authorization,
+        },
+      })
+      .then((response) => {
+        // console.log(response.data);
+        setCompleteTasks(response.data);
+        console.log(response.data);
+        setDataLoading(false);
+        // setLoading(false);
+        // handle successful response here
+      })
+      .catch((error) => {
+        console.log(error);
+        setDataLoading(false);
+        // handle error here
+      });
+  }, [dataLoading]);
+
+  return loading ? (
+    <MySpin />
+  ) : dataLoading ? (
+    <MySpin />
+  ) : (
     <>
       <ProjectHeader />
       <div className="  static h-24 bg-gray-200">
@@ -22,17 +103,17 @@ const MemberProfile = () => {
           <Breadcrumb
             items={[
               {
-                title: <a href="">Dashboard</a>,
+                title: <a href="/dashboard/members">Members List</a>,
               },
               {
-                title: "Name's Profile",
+                title: `${member_info.username}'s Profile`,
               },
             ]}
           />
         </div>
         <Avatar
-          size={90}
-          src="https://thumbs.dreamstime.com/b/iron-man-17900674.jpg"
+          size={95}
+          src={member_info.imgUrl}
           className=" border-gray-200 border-8 bg-black ml-52  absolute  top-32 "
         />
       </div>
@@ -40,15 +121,17 @@ const MemberProfile = () => {
       <div className=" w-40 text-center  flex items-start flex-row justify-evenly h-8 ml-44  ">
         <div className=" flex flex-col items-center p-0 m-0 space-x-0 space-y-0">
           <Title
-            className=" mb-0 pb-0 h-full  w-full  text-ellipsis overflow-hidden whitespace-nowrap"
+            className=" mb-0 pb-0 h-full mt-1  w-full  text-ellipsis overflow-hidden whitespace-nowrap"
             level={4}
           >
-            Khant Zwe Naing
+            {member_info.username}
           </Title>
           <p className=" pt-0 mt-0 font-robo text-sm text-gray-400">
-            neymar@example.com
+            {member_info.email}
           </p>
-          <p className=" font-robo text-sm  pt-0  ">UI/UX Designer</p>
+          <p className=" font-robo text-sm  pt-0  ">
+            {member_info.positionName}
+          </p>
         </div>
       </div>
       <div className=" h-14"></div>
@@ -63,7 +146,7 @@ const MemberProfile = () => {
             border: " 2px solid #597EF7",
           }}
         >
-          <p className="font-bold pb-1">12</p>
+          <p className="font-bold pb-1">{member_info.projects.length}</p>
           <p>Projects</p>
         </Card>
         <Card
@@ -74,7 +157,9 @@ const MemberProfile = () => {
             border: " 2px solid #D9D9D9",
           }}
         >
-          <p className="font-bold pt-5">12</p>
+          <p className="font-bold pt-5">
+            {todoTasks !== null ? todoTasks.length : 0}
+          </p>
         </Card>
         <Card
           title="In Progress Tasks"
@@ -84,7 +169,9 @@ const MemberProfile = () => {
             border: " 2px solid #40A9FF ",
           }}
         >
-          <p className="font-bold pt-5">12</p>
+          <p className="font-bold pt-5">
+            {inProgressTasks !== null ? inProgressTasks.length : 0}
+          </p>
         </Card>
         <Card
           title="Completed Tasks"
@@ -94,7 +181,9 @@ const MemberProfile = () => {
             border: " 2px solid #73D13D",
           }}
         >
-          <p className="font-bold pt-5">12</p>
+          <p className="font-bold pt-5">
+            {completeTasks !== null ? completeTasks.length : 0}
+          </p>
         </Card>
       </div>
       <div className=" flex items-center justify-evenly ">
@@ -109,12 +198,15 @@ const MemberProfile = () => {
               >
                 Total Projects
               </Title>
-              <span>12</span>
+              <span>{member_info.projects.length}</span>
             </div>
             <div className=" mx-4">
               <Progress
-                percent={60}
+                percent={100}
                 success={{
+                  percent: 30,
+                }}
+                inprogress={{
                   percent: 30,
                 }}
                 type="dashboard"
@@ -147,7 +239,7 @@ const MemberProfile = () => {
               >
                 Total Tasks
               </Title>
-              <span>12</span>
+              <span>{member_info.tasks.length}</span>
             </div>
             <div className=" mx-4">
               <Progress

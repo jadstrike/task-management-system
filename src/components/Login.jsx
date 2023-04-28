@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
-import { userLogin } from "../features/auth/authActions";
+import { getCurrentUserRole, userLogin } from "../features/auth/authActions";
 import LoginFailed from "./Error/LoginFailed";
 import { UserOutlined, ThunderboltFilled } from "@ant-design/icons";
 import {
@@ -16,8 +16,11 @@ import {
 } from "antd";
 import { useEffect } from "react";
 import { remember } from "../features/auth/authSlice";
+import { persistor } from "../app/store";
 const { Title } = Typography;
 const Login = () => {
+  // persistor.purge();
+
   const username = Cookies.get("login_info");
   const password = Cookies.get("password");
   // console.log(username);
@@ -33,7 +36,12 @@ const Login = () => {
   };
 
   useEffect(() => {
-    isLoggedIn ? navigate("/dashboard") : <LoginFailed />;
+    if (isLoggedIn) {
+      // dispatch(getCurrentUserRole());
+      navigate("/dashboard");
+    } else {
+      <LoginFailed />;
+    }
   }, [isLoggedIn]);
 
   const onFinishFailed = (errorInfo) => {

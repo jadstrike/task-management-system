@@ -20,16 +20,23 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import Tasks from "./Tasks";
 import { DragDropContext } from "react-beautiful-dnd";
-import { createTask } from "../../features/projects/projectActions";
+import {
+  createTask,
+  getToDoTasks,
+} from "../../features/projects/projectActions";
 import { setTaskEdit } from "../../features/projects/projectSlice";
 
 const ProjectTasks = () => {
+  const [form] = Form.useForm();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const project_detail = useSelector((state) => state.project.detail_project);
   const isTaskEdit = useSelector((state) => state.project.taskEdit);
+  const taskEditInfo = useSelector((state) => state.project.taskEditInfo);
+  console.log(taskEditInfo);
   useEffect(() => {
     if (isTaskEdit) {
       setIsDrawerOpen(true);
@@ -69,6 +76,10 @@ const ProjectTasks = () => {
     setIsDrawerOpen(true);
   };
 
+  const handleTaskEdit = () => {
+    // setIsDrawerOpen(true);
+  };
+
   const closeDrawer = () => {
     setIsDrawerOpen(false);
     setTimeout(() => {
@@ -92,11 +103,25 @@ const ProjectTasks = () => {
       id: project_detail.id,
     };
     dispatch(createTask(task));
+    setTimeout(() => {
+      // your code here
+      setRefresh(!refresh);
+      form.resetFields();
+    }, 500);
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
+  useEffect(() => {
+    dispatch(getToDoTasks(project_detail.id));
+
+    // dispatch(getToDoTasks(projectId));
+    // dispatch(getDoneTasks(projectId));
+    // dispatch(getFailedTasks(projectId));
+    // dispatch(getUnassignedtasks(projectId));
+  }, [refresh]);
 
   const disableDate = (current) => {
     return current && current < moment().startOf("day");
@@ -108,7 +133,11 @@ const ProjectTasks = () => {
         items={[
           {
             title: (
-              <a onClick={() => navigate(`/dashboard/ProjectsLists`)}>
+              <a
+                onClick={() => {
+                  navigate(`/dashboard/ProjectsLists`);
+                }}
+              >
                 Projects List
               </a>
             ),
@@ -161,7 +190,22 @@ const ProjectTasks = () => {
           {isTaskEdit ? "Edit a task" : "Create a new task"}
         </Title>
         <div className=" flex flex-col justify-center items-center ">
-          <Form onFinish={handleTaskCreate} className=" pt-4 mt-4">
+          <Form
+            form={form}
+            onFinish={isTaskEdit ? handleTaskEdit : handleTaskCreate}
+            className=" pt-4 mt-4"
+            initialValues={
+              isTaskEdit
+                ? {
+                    title: taskEditInfo.title,
+                    description: taskEditInfo.description,
+                    dueDate: moment(taskEditInfo.dueDate),
+                    userId: taskEditInfo.userId,
+                    priorityStatus: taskEditInfo.priorityStatus,
+                  }
+                : null
+            }
+          >
             <Form.Item name="title">
               <Input
                 style={{ width: "280px", borderRadius: "1px" }}
@@ -217,7 +261,7 @@ const ProjectTasks = () => {
                 htmlType="submit"
               >
                 {/* {isLoading ? "Creating member account.." : "Create"} */}
-                Create
+                {isTaskEdit ? "Edit Task" : "Create Task"}
               </Button>
             </Form.Item>
           </Form>

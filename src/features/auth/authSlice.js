@@ -18,7 +18,7 @@ const initialState = {
   error: null,
   success: false,
   remember: false,
-  isLoggedIn: cookie_loggedin,
+  isLoggedIn: false,
   user_login_email: null,
   user_login_pwd: null,
   expiredAt: cookie_expireat,
@@ -34,9 +34,8 @@ export const authSlice = createSlice({
       state.user_login_email = action.payload.email;
       state.user_login_pwd = action.payload.password;
     },
-    logout: (state) => {
+    resetAuth: (state) => {
       Object.assign(state, initialState);
-      localStorage.removeItem("persist:root");
     },
   },
   extraReducers: (builder) => {
@@ -92,6 +91,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { remember, logout } = authSlice.actions;
+export const { remember, resetAuth } = authSlice.actions;
 
 export default authSlice.reducer;

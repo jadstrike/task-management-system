@@ -18,7 +18,7 @@ const Dashboard = () => {
   const success = (ex) => {
     messageApi.open({
       type: "success",
-      content: `Welcome! you have access up to ${ex}`,
+      content: `Welcome!  ${ex}`,
     });
   };
 
@@ -32,6 +32,7 @@ const Dashboard = () => {
   };
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  // dispatch(getCurrentUserRole());
   const expiredAt = useSelector((state) => state.auth.expiredAt);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const loading = useSelector((state) => state.auth.loading);
@@ -51,19 +52,19 @@ const Dashboard = () => {
   const formattedExpire = expiredDate.toLocaleString("en-US", options);
 
   useEffect(() => {
-    // isLoggedIn ? success(formattedExpire) : navigate("/loginfailed");
+    // isLoggedIn ? success(user_email) : navigate("/loginfailed");
     isLoggedIn ? dispatch(getCurrentUserRole()) : navigate("/loginfailed");
   }, [isLoggedIn]);
   useEffect(() => {
     isRemember ? openNotificationWithIcon("warning") : null;
   }, [isRemember]);
 
-  isRemember ? Cookies.set("login_info", user_email, { expires: 1 }) : null;
-  isRemember ? Cookies.set("password", user_pwd, { expires: 1 }) : null;
-  isRemember ? Cookies.set("cookie_loggedin", true, { expires: 1 }) : null;
-  isRemember
-    ? Cookies.set("cookie_expireat", formattedExpire, { expires: 1 })
-    : null;
+  // isRemember ? Cookies.set("login_info", user_email, { expires: 1 }) : null;
+  // isRemember ? Cookies.set("password", user_pwd, { expires: 1 }) : null;
+  // isRemember ? Cookies.set("cookie_loggedin", true, { expires: 1 }) : null;
+  // isRemember
+
+  //   : null;
   return (
     <>
       <Layout

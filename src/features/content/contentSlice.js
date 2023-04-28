@@ -11,7 +11,11 @@ const initialState = {
 export const contentSlice = createSlice({
   name: "content",
   initialState,
-  reducers: {},
+  reducers: {
+    resetContent: (state) => {
+      Object.assign(state, initialState);
+    },
+  },
   extraReducers: (builder) => {
     //GET MEMBER COUNT
     builder.addCase(getMemberCount.pending, (state) => {
@@ -54,5 +58,5 @@ export const contentSlice = createSlice({
     });
   },
 });
-
+export const { resetContent } = contentSlice.actions;
 export default contentSlice.reducer;

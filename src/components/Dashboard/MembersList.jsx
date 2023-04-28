@@ -23,6 +23,9 @@ import {
   DetailMember,
   getMemberList,
   getPositinLists,
+  getUserDoneTasks,
+  getUserInProgressTasks,
+  getUserToDoTasks,
 } from "../../features/member/memberActions";
 import MySpin from "./MySpin";
 
@@ -77,9 +80,9 @@ const MembersList = () => {
     dispatch(DeleteMember(record.id));
     // setRefresh(true);
   };
+
   const cancelHandler = (record) => {
     console.log(record);
-
     // message.error("Click ");
   };
 
@@ -96,6 +99,10 @@ const MembersList = () => {
   const handleView = (record) => {
     console.log(record.id);
     dispatch(DetailMember(record.id));
+    dispatch(getUserToDoTasks());
+    dispatch(getUserInProgressTasks());
+    dispatch(getUserDoneTasks());
+    navigate("/MemberProfile");
   };
   //------Create Member-----//
   const onFinish = (values) => {

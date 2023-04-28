@@ -17,6 +17,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { BellFilled, UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import Swal from "sweetalert2";
+import { resetAuth } from "../../features/auth/authSlice";
+import { resetContent } from "../../features/content/contentSlice";
+import { resetProject } from "../../features/projects/projectSlice";
+import { resetMember } from "../../features/member/memberSlice";
 const { Header } = Layout;
 
 const ProjectHeader = () => {
@@ -63,7 +67,7 @@ const ProjectHeader = () => {
         setLoading(false);
 
         console.log(response);
-        antdMessage.success("Profile Updated Successfully");
+        antdMessage.success("Password Updated Successfully");
         setDisabled(true);
         setPasswordEdit(false);
         // handle successful response here
@@ -95,7 +99,7 @@ const ProjectHeader = () => {
       imgurl: formdata.imgurl,
       positionId: role_id,
     };
-    console.log(data);
+    console.log("Member Update", member_update_data);
     setLoading(true);
 
     role === "ROLE_ADMIN"
@@ -138,7 +142,7 @@ const ProjectHeader = () => {
             setLoading(false);
             setProfileData(response.data);
             console.log(ProfileData);
-            antdMessage.success("Password Updated Successfully");
+            antdMessage.success("Profile Updated Successfully");
             setDisabled(true);
             // handle successful response here
           })
@@ -161,8 +165,14 @@ const ProjectHeader = () => {
   const handleLogout = () => {
     console.log("logout");
     localStorage.removeItem("token");
-    dispatch(logout());
-    navigate("/dashboard");
+    localStorage.removeItem("root");
+    // persistor.purge();
+    dispatch(resetAuth());
+    dispatch(resetContent());
+    dispatch(resetProject());
+    dispatch(resetMember());
+
+    navigate("/");
   };
 
   useEffect(() => {
@@ -437,11 +447,25 @@ const ProjectHeader = () => {
           <div className=" flex flex-row space-x-2 justify-center items-center">
             <div className=" w-[160px] h-[95px] bg-white flex flex-col justify-center space-y-2 items-start">
               <span className=" ml-3 text-gray-400">Total Projects</span>
-              <span className=" text-lg ml-3">{projectsCount}</span>
+              <span className=" text-lg ml-3">
+                {role === "ROLE_ADMIN"
+                  ? projectsCount
+                  : role === "ROLE_USER"
+                  ? ProfileData.projects.length
+                  : null}
+              </span>
             </div>
             <div className=" w-[160px] h-[95px] bg-white flex flex-col justify-center space-y-2 items-start ">
-              <span className=" ml-3 text-gray-400">Total Members</span>
-              <span className=" ml-3 text-lg">{memberCount}</span>
+              <span className=" ml-3 text-gray-400">
+                {role === "ROLE_ADMIN" ? "Total Members" : "Total Tasks"}
+              </span>
+              <span className=" ml-3 text-lg">
+                {role === "ROLE_ADMIN"
+                  ? memberCount
+                  : role === "ROLE_USER"
+                  ? ProfileData.tasks.length
+                  : null}
+              </span>
             </div>
           </div>
           <div

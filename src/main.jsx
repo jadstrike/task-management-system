@@ -22,12 +22,20 @@ import ProjectTasks from "./components/Project/ProjectTasks";
 import MemberTasks from "./components/Dashboard/MemberTasks";
 import ProjectMembers from "./components/Project/ProjectMembers";
 import Dnd from "./components/dnd-test";
+import Checkrole from "./components/CheckrRole";
+import MemberProjectDash from "./components/Project/MemberProjectDash";
+import MemberProfile from "./components/UI/MemberProfile";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Login />,
     errorElement: <NotFound />,
+  },
+  {
+    path: "/checkrole",
+    element: <Checkrole />,
+    errorElement: <LoginFailed />,
   },
 
   {
@@ -72,6 +80,14 @@ const router = createBrowserRouter([
       },
     ],
     errorElement: <ErrorPage />,
+  },
+  {
+    path: "/MemberProfile",
+    element: <MemberProfile />,
+  },
+  {
+    path: "UserProjectDashboard",
+    element: <MemberProjectDash />,
   },
   {
     path: "/dashboard/profile",

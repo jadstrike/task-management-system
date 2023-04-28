@@ -327,3 +327,31 @@ export const getFailedTasks = createAsyncThunk(
     }
   }
 );
+
+export const getUnassignedtasks = createAsyncThunk(
+  "project/getUnassignedtasks",
+  async (id) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization,
+        },
+      };
+      const { data } = await axios.get(
+        `${backendURL}/api/unassignedList/${id}`,
+
+        config
+      );
+      //store user's token in local storage
+      // console.log(data);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return error.response.data.message;
+      } else {
+        return error.message;
+      }
+    }
+  }
+);

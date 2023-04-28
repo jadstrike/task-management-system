@@ -19,7 +19,7 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 const { Title } = Typography;
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   DeleteProject,
@@ -29,8 +29,10 @@ import {
   getProjectDetail,
   getProjectTasks,
   getToDoTasks,
+  getUnassignedtasks,
   updateProject,
 } from "../../features/projects/projectActions";
+import MySpin from "../Dashboard/MySpin";
 
 const ProjectCard = ({ item, index, id, fcolor, scolor }) => {
   // console.log(item);
@@ -54,6 +56,7 @@ const ProjectCard = ({ item, index, id, fcolor, scolor }) => {
   ];
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tasksloading, setTasksloading] = useState(false);
   const [isCardOpen, setCardOpen] = useState(true);
 
   const dispatch = useDispatch();
@@ -110,14 +113,35 @@ const ProjectCard = ({ item, index, id, fcolor, scolor }) => {
   };
   const navigate = useNavigate();
   const toprojectdashboard = () => {
-    setCardOpen(true);
-    dispatch(getProjectDetail(projectId));
-    dispatch(getInProgressTasks(projectId));
-    dispatch(getToDoTasks(projectId));
-    dispatch(getDoneTasks(projectId));
-    dispatch(getFailedTasks(projectId));
-    // dispatch(getProjectTasks(projectId));
-    navigate("/ProjectDashboard");
+    if (role === "ROLE_ADMIN") {
+      setCardOpen(true);
+      dispatch(getProjectDetail(projectId));
+      dispatch(getInProgressTasks(projectId));
+      dispatch(getToDoTasks(projectId));
+      dispatch(getDoneTasks(projectId));
+      dispatch(getFailedTasks(projectId));
+      dispatch(getUnassignedtasks(projectId));
+      // dispatch(getProjectTasks(projectId));
+      setTimeout(() => {
+        navigate("/ProjectDashboard");
+      }, 1000);
+    } else if (role === "ROLE_USER") {
+      setTasksloading(true);
+
+      setTimeout(() => {
+        setTasksloading(false);
+        navigate("/UserProjectDashboard");
+      }, 1000);
+
+      // setCardOpen(true);
+      dispatch(getProjectDetail(projectId));
+      dispatch(getInProgressTasks(projectId));
+      dispatch(getToDoTasks(projectId));
+      dispatch(getDoneTasks(projectId));
+      dispatch(getFailedTasks(projectId));
+      dispatch(getUnassignedtasks(projectId));
+      // dispatch(getProjectTasks(projectId));
+    }
   };
 
   const buttonClick = (e) => {
@@ -139,6 +163,7 @@ const ProjectCard = ({ item, index, id, fcolor, scolor }) => {
     >
       <Card
         hoverable={true}
+        loading={tasksloading}
         onClick={isCardOpen ? toprojectdashboard : null}
         key={id}
         title={item.title}

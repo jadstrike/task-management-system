@@ -10,6 +10,7 @@ import {
   getProjectList,
   getProjectTasks,
   getToDoTasks,
+  getUnassignedtasks,
   updateProject,
 } from "./projectActions";
 
@@ -25,8 +26,10 @@ const initialState = {
   project_to_do_tasks: null,
   project_done_tasks: null,
   project_failed_tasks: null,
+  project_unassigned_tasks: null,
 
   taskEdit: false,
+  taskEditInfo: null,
 
   deleteMessage: null,
 };
@@ -37,6 +40,18 @@ export const projectSlice = createSlice({
   reducers: {
     setTaskEdit: (state, action) => {
       state.taskEdit = action.payload;
+    },
+    setTaskEditInfo: (state, action) => {
+      state.taskEditInfo = action.payload;
+    },
+    resetProjectTasks: (state, action) => {
+      state.project_in_progress_tasks = null;
+      state.project_done_tasks = null;
+      state.project_failed_tasks = null;
+      state.project_unassigned_tasks = null;
+    },
+    resetProject: (state) => {
+      Object.assign(state, initialState);
     },
   },
   extraReducers: (builder) => {
@@ -255,10 +270,30 @@ export const projectSlice = createSlice({
       state.success = false;
     });
 
+    builder.addCase(getUnassignedtasks.pending, (state) => {
+      // console.log("pending");
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(getUnassignedtasks.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.success = true;
+      state.project_unassigned_tasks = payload;
+      // console.log(payload);
+      // state.projects_list = payload;
+    });
+    builder.addCase(getUnassignedtasks.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.error = payload;
+      console.log(state.error);
+      state.success = false;
+    });
+
     //GET CURRENT USER PROJECTS
   },
 });
 
-export const { setTaskEdit } = projectSlice.actions;
+export const { setTaskEdit, resetProjectTasks, resetProject, setTaskEditInfo } =
+  projectSlice.actions;
 
 export default projectSlice.reducer;

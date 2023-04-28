@@ -35,7 +35,10 @@ import {
   getUserInProgressTasks,
   getUserToDoTasks,
 } from "../../features/member/memberActions";
-import { logout } from "../../features/auth/authSlice";
+import { resetAuth } from "../../features/auth/authSlice";
+import { resetContent } from "../../features/content/contentSlice";
+import { resetMember } from "../../features/member/memberSlice";
+import { resetProject } from "../../features/projects/projectSlice";
 const { Title } = Typography;
 
 const { Header } = Layout;
@@ -46,6 +49,7 @@ const DashboardHeader = () => {
   const backendURL = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem("token");
   const Authorization = `Bearer ${token}`;
+  const [passwordEdit, setPasswordEdit] = useState(false);
   const [passwordMode, setPasswordMode] = useState(false);
   const [logOutLoading, setLogOutLoading] = useState(false);
   const [ProfileData, setProfileData] = useState(null);
@@ -61,6 +65,7 @@ const DashboardHeader = () => {
   const closeDrawer = () => {
     setIsDrawerOpen(false);
     setDisabled(true);
+    setPasswordEdit(false);
   };
   const [notiCount, setnotiCount] = useState(5);
   const navigate = useNavigate();
@@ -74,6 +79,32 @@ const DashboardHeader = () => {
         console.log("Notification Clicked!");
       },
     });
+  };
+
+  const handleChangePassword = (formdata) => {
+    console.log(formdata);
+    axios
+      .put(`${backendURL}/api/changePassword`, formdata, {
+        headers: {
+          Authorization: Authorization,
+        },
+      })
+      .then((response) => {
+        setLoading(false);
+
+        console.log(response);
+        message.success("Password Updated Successfully");
+        setDisabled(true);
+        setPasswordEdit(false);
+        // handle successful response here
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+        // alert(error.response.data);
+        showerror(error.response.data);
+        // antdMessage.error(error.response.data);
+      });
   };
 
   const handleUpdate = (formdata) => {
@@ -119,7 +150,7 @@ const DashboardHeader = () => {
             Swal.fire({
               icon: "error",
               title: "Oops...",
-              text: message,
+              text: "something went wrong!",
             });
 
             // handle error here
@@ -170,9 +201,12 @@ const DashboardHeader = () => {
     console.log("logout");
     localStorage.removeItem("token");
     localStorage.removeItem("root");
-    persistor.purge();
+    // persistor.purge();
+    dispatch(resetAuth());
+    dispatch(resetContent());
+    dispatch(resetProject());
+    dispatch(resetMember());
 
-    dispatch(logout());
     navigate("/");
   };
 
@@ -281,55 +315,66 @@ const DashboardHeader = () => {
             ></Avatar>
             <div className=" w-[300px] mt-4 h-[280px] bg-[#FFFFFF] flex flex-col justify-start pt-4  items-center">
               <Title level={5}>About Me</Title>
-              {isDisabled ? (
-                <div className="">
-                  {Loading ? (
-                    <Spin />
-                  ) : (
-                    <table className=" text-sm  my-3">
-                      <tbody>
-                        <tr>
-                          <td className="px-2 py-2 text-gray-500 font-semibold">
-                            Name:
-                          </td>
-                          <td className="px-2 py-2">{ProfileData.username}</td>
-                          {console.log(ProfileData)}
-                        </tr>
-                        <tr>
-                          <td className="px-2 py-2 text-gray-500 font-semibold">
-                            Email:
-                          </td>
-                          <td className="px-2 py-2">{ProfileData.email}</td>
-                        </tr>
-                        <tr>
-                          <td className="px-2 py-2 text-gray-500 font-semibold">
-                            Password:
-                          </td>
-                          <td className="px-2 py-2">********</td>
-                        </tr>
-                        <tr>
-                          <td className="px-2 py-2 text-gray-500 font-semibold">
-                            Position:
-                          </td>
-                          <td className="px-2 py-2">
-                            {ProfileData.positionName}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  )}
-
-                  <div className=" flex flex-row mt-10 items-start justify-evenly">
-                    <a onClick={() => setDisabled(false)}>Edit Profile</a>
-                    <span>|</span>
-                    <a
-                    // onClick={() => setDisabled(false)}
+              {isDisabled && passwordEdit ? (
+                <Form
+                  labelAlign="center"
+                  layout="vertical"
+                  // form={form}
+                  onFinish={handleChangePassword}
+                >
+                  <Form.Item
+                    requiredMark={false}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input Old Password",
+                      },
+                    ]}
+                    label="Old Password"
+                    name="oldPassword"
+                  >
+                    <Input.Password></Input.Password>
+                  </Form.Item>
+                  <Form.Item
+                    requiredMark={false}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input New Password",
+                      },
+                    ]}
+                    label="New Passsword"
+                    name="newPassword"
+                  >
+                    <Input.Password></Input.Password>
+                  </Form.Item>
+                  <div className=" flex flex-row space-x-3 justify-center items-center">
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      loading={Loading}
+                      style={{ width: "100px", height: "40px" }}
                     >
-                      Change Password
-                    </a>
+                      Save
+                    </Button>
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        setDisabled(true);
+                        setPasswordEdit(false);
+                        // form.resetFields();
+                      }}
+                      style={{
+                        width: "100px",
+                        height: "40px",
+                        backgroundColor: "gray",
+                      }}
+                    >
+                      Back
+                    </Button>
                   </div>
-                </div>
-              ) : (
+                </Form>
+              ) : !isDisabled ? (
                 <Form
                   form={form}
                   initialValues={{
@@ -371,7 +416,58 @@ const DashboardHeader = () => {
                     </Button>
                   </div>
                 </Form>
-              )}
+              ) : isDisabled ? (
+                <div className="">
+                  {Loading ? (
+                    <Spin />
+                  ) : (
+                    <table className=" text-sm  my-3">
+                      <tbody>
+                        <tr>
+                          <td className="px-2 py-2 text-gray-500 font-semibold">
+                            Name:
+                          </td>
+                          <td className="px-2 py-2">{ProfileData.username}</td>
+                          {console.log(ProfileData)}
+                        </tr>
+                        <tr>
+                          <td className="px-2 py-2 text-gray-500 font-semibold">
+                            Email:
+                          </td>
+                          <td className="px-2 py-2">{ProfileData.email}</td>
+                        </tr>
+                        <tr>
+                          <td className="px-2 py-2 text-gray-500 font-semibold">
+                            Password:
+                          </td>
+                          <td className="px-2 py-2">********</td>
+                        </tr>
+                        <tr>
+                          <td className="px-2 py-2 text-gray-500 font-semibold">
+                            Position:
+                          </td>
+                          <td className="px-2 py-2">
+                            {ProfileData.positionName}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  )}
+
+                  <div className=" flex flex-row mt-10 items-start justify-evenly">
+                    <a onClick={() => setDisabled(false)}>Edit Profile</a>
+                    <span>|</span>
+                    <a
+                      onClick={() => {
+                        setDisabled(true);
+                        setPasswordEdit(true);
+                      }}
+                    >
+                      Change Password
+                    </a>
+                  </div>
+                </div>
+              ) : null}
             </div>
           </div>
 

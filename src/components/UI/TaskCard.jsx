@@ -11,8 +11,15 @@ import {
 } from "@ant-design/icons";
 import { Draggable } from "react-beautiful-dnd";
 import { useState } from "react";
-import { setTaskEdit } from "../../features/projects/projectSlice";
-import { startTask } from "../../features/member/memberActions";
+import {
+  setTaskEdit,
+  setTaskEditInfo,
+} from "../../features/projects/projectSlice";
+import {
+  endTask,
+  startTask,
+  stopTask,
+} from "../../features/member/memberActions";
 import {
   getUserDoneTasks,
   getUserFailedTasks,
@@ -20,21 +27,33 @@ import {
   getUserToDoTasks,
 } from "../../features/member/memberActions";
 const TaskCard = (props) => {
+  const taskEditInfo = {
+    id: props.id,
+    title: props.title,
+    description: props.description,
+    dueDate: props.dueDate,
+    userId: props.userId,
+    priorityStatus: props.priorityStatus,
+  };
   const [isStart, setIsStart] = useState(false);
+  const [timesheetId, setTimesheetId] = useState(null);
   const refreshTasks = () => {
     dispatch(getUserDoneTasks());
     dispatch(getUserInProgressTasks());
     dispatch(getUserToDoTasks());
     dispatch(getUserFailedTasks());
   };
+  // const handleStartTask = async (taskId) => {
+  //   const response = await dispatch(startTask(taskId));
+  //   console.log("This is from task card", response);
+  //   setTimesheetId(response.timesheetId);
+  // };
 
   // console.log(props.no);
   const role = useSelector((state) => state.auth.role);
+  const role_id = useSelector((state) => state.auth.role_id);
   const dispatch = useDispatch();
-  const taskedit = () => {
-    console.log("Task Edit");
-    dispatch(setTaskEdit(true));
-  };
+
   //   console.log("Props", title);
   //   console.log("Props", description);
   const formattedDate = moment.utc(props.dueDate).format("DD/MM/YYYY");
@@ -49,7 +68,12 @@ const TaskCard = (props) => {
       title={props.title !== undefined ? props.title : "No Title"}
       extra={
         role === "ROLE_ADMIN" ? (
-          <DashOutlined onClick={() => taskedit()} />
+          <DashOutlined
+            onClick={() => {
+              dispatch(setTaskEditInfo(taskEditInfo));
+              dispatch(setTaskEdit(true));
+            }}
+          />
         ) : null
       }
       size="small"
@@ -68,7 +92,7 @@ const TaskCard = (props) => {
           {props.projectTitle ? (
             <div className=" space-x-1">
               <ProjectOutlined />
-              <span>{props.projectTitle}</span>
+              <span className=" text-ellipsis">{props.projectTitle}</span>
             </div>
           ) : null}
           <Tag
@@ -88,7 +112,7 @@ const TaskCard = (props) => {
         </div>
         <div>
           <div className=" flex flex-col justify-center items-center">
-            <Avatar className=" mb-2" icon={<UserOutlined />} />
+            <Avatar className=" mb-2" icon={<UserOutlined />} src="" />
             <div className=" text-[12px] text-center">
               {props.username === null
                 ? "Unassigned"
@@ -112,8 +136,10 @@ const TaskCard = (props) => {
                     <PlayCircleFilled
                       className=" w-ful hover:backdrop-blur-sm"
                       onClick={() => {
+                        // dispatch(timesheetId(props.id));
                         dispatch(startTask(props.id));
-                        setIsStart(true);
+
+                        // setIsStart(true);
                         // refreshTasks();
                       }}
                       style={{
@@ -123,14 +149,50 @@ const TaskCard = (props) => {
                     />
                   ) : props.counter === 0 ? (
                     <PauseCircleFilled
+                      onClick={() => {
+                        dispatch(stopTask(props.id));
+                        // setIsStart(false);
+                        // refreshTasks();
+                      }}
                       style={{ fontSize: "25px", color: "red" }}
                     />
                   ) : null}
                 </div>
               )}
-              {role === "ROLE_USER" && props.no !== true && (
-                <Button type="primary">Done</Button>
-              )}
+              {role === "ROLE_USER" &&
+                props.no !== true &&
+                (props.userId ? (
+                  props.userId === role_id ? (
+                    <Button
+                      onClick={() => dispatch(endTask(props.id))}
+                      type="primary"
+                    >
+                      Done
+                    </Button>
+                  ) : null
+                ) : (
+                  <Button
+                    onClick={() => dispatch(endTask(props.id))}
+                    type="primary"
+                  >
+                    Done
+                  </Button>
+                ))}
+              {/* {role === "ROLE_USER" && props.no !== true && (
+                // <Button
+                //   onClick={() => dispatch(endTask(props.id))}
+                //   type="primary"
+                // >
+                  {props.userId
+                    ? props.userId === role_id
+                      ?  <Button
+                      onClick={() => dispatch(endTask(props.id))}
+                      type="primary"
+                    ></Button>
+                      : null
+                    : "Done"}
+               
+              )} */}
               {props.no === true && (
                 <span className="flex text-center flex-row  text-green-700">
                   Spent Time : {props.duration} hours
